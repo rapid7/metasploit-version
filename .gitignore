@@ -1,17 +1,9 @@
-*.gem
-*.rbc
+# bundler
 .bundle
-.config
-.yardoc
+
+# Rubymine
+.idea
+
+# @see http://yehudakatz.com/2010/12/16/clarifying-the-roles-of-the-gemspec-and-gemfile/
 Gemfile.lock
-InstalledFiles
-_yardoc
-coverage
-doc/
-lib/bundler/man
-pkg
-rdoc
-spec/reports
-test/tmp
-test/version_tmp
-tmp
+
