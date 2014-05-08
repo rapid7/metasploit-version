@@ -4,8 +4,14 @@ source 'https://rubygems.org'
 gemspec
 
 group :test do
+  # Test the shared example
+  gem 'aruba'
+  # Upload spec coverage to codeclimate.com
   gem 'codeclimate-test-reporter', require: false
+  # Upload spec coverage to coveralls.io
   gem 'coveralls', require: false
-  # code coverate for specs
+    # Test the shared example
+  gem 'cucumber'
+  # code coverage for specs
   gem 'simplecov', require: false
 end

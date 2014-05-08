@@ -4,6 +4,9 @@
 # Rubymine
 .idea
 
+# aruba temporary files
+/tmp
+
 # simplecov
 coverage
 
