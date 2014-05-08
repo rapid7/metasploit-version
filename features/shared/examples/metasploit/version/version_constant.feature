@@ -1,6 +1,6 @@
 Feature: 'Metasploit::Version VERSION constant' shared example
 
-  The 'Metasploit::Version VERSION constant' shared example will check that the described_class for an RSPec *_spec.rb
+  The 'Metasploit::Version VERSION constant' shared example will check that the described_class for an RSpec *_spec.rb
   file has a VERSION constant equal to described_class::Version.full, which indicates that VERSION is setup to
   use the Metasploit::Version::Full#full methods that was extended in described_class::VERSION.
 
@@ -23,7 +23,7 @@ Feature: 'Metasploit::Version VERSION constant' shared example
       require f
     end
     """
-    Given a file named "spec/lib/my_namespace/my_gem/version_spec.rb" with:
+    Given a file named "spec/lib/my_namespace/my_gem_spec.rb" with:
     """ruby
     require 'spec_helper'
 
@@ -60,7 +60,7 @@ Feature: 'Metasploit::Version VERSION constant' shared example
       end
     end
     """
-    When I run `rspec spec/lib/my_namespace/my_gem/version_spec.rb --format documentation`
+    When I run `rspec spec/lib/my_namespace/my_gem_spec.rb --format documentation`
     Then the output should contain "expected MyNamespace::MyGem::VERSION to be defined"
   Scenario: VERSION is not equal to Version.full
     Given a file named "lib/my_namespace/my_gem/version.rb" with:
@@ -93,7 +93,7 @@ Feature: 'Metasploit::Version VERSION constant' shared example
       end
     end
     """
-    When I run `rspec spec/lib/my_namespace/my_gem/version_spec.rb --format documentation`
+    When I run `rspec spec/lib/my_namespace/my_gem_spec.rb --format documentation`
     Then the output should contain "expected MyNamespace::MyGem::VERSION to equal MyNamespace::MyGem::Version.full"
   Scenario: VERSION is equal to Version.full
     Given a file named "lib/my_namespace/my_gem/version.rb" with:
@@ -126,5 +126,5 @@ Feature: 'Metasploit::Version VERSION constant' shared example
       end
     end
     """
-    When I run `rspec spec/lib/my_namespace/my_gem/version_spec.rb --format documentation`
+    When I run `rspec spec/lib/my_namespace/my_gem_spec.rb --format documentation`
     Then the output should contain "0 failures"
