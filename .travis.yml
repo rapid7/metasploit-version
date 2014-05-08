@@ -1,11 +1,6 @@
 language: ruby
-matrix:
-  allow_failures:
-    # rbx installer errors on travis-ci as of 2014-05-08
-    - rbx
 rvm:
   - 1.9.3
   - 2.0
   - 2.1
   - jruby
-  - rbx
