@@ -1,4 +1,4 @@
-# Metasploit::Version [![Build Status](https://travis-ci.org/rapid7/metasploit-version.svg)](https://travis-ci.org/rapid7/metasploit-version)[![Code Climate](https://codeclimate.com/github/rapid7/metasploit-version.png)](https://codeclimate.com/github/rapid7/metasploit-version)
+# Metasploit::Version [![Build Status](https://travis-ci.org/rapid7/metasploit-version.svg)](https://travis-ci.org/rapid7/metasploit-version)[![Code Climate](https://codeclimate.com/github/rapid7/metasploit-version.png)](https://codeclimate.com/github/rapid7/metasploit-version)[![Coverage Status](https://coveralls.io/repos/rapid7/metasploit-version/badge.png)](https://coveralls.io/r/rapid7/metasploit-version)
 
 Metasploit::Version allows your gem to declare the pieces of its [semantic version](semver.org) as constant and for
 your `VERSION` `String` to be automatically derived from those constants.  Shared examples are available to test that
