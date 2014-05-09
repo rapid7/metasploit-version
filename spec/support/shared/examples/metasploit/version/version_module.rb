@@ -5,9 +5,7 @@ shared_examples_for 'Metasploit::Version Version Module' do
         described_class::MAJOR
       end
 
-      it 'is 0 because the API is not locked yet' do
-        expect(major).to eq(0)
-      end
+      it { should be_an Integer }
     end
 
     context 'MINOR' do
