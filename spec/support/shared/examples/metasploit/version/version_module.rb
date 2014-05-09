@@ -32,7 +32,7 @@ shared_examples_for 'Metasploit::Version Version Module' do
     # PRERELEASE can only be set appropriately for a merge by merging to the target branch and then updating PRERELEASE
     # on the target branch before committing and/or pushing to github and travis-ci.
     if pull_request.nil? || pull_request == 'false'
-      context 'PREPRELEASE' do
+      context 'PRERELEASE' do
         subject(:prerelease) do
           described_class::PRERELEASE
         end
