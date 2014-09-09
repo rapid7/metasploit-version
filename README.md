@@ -74,7 +74,8 @@ The spec for your gem's namespace `Module` should use the `'Metasploit::Version 
     require 'spec_helper'
 
     describe MyNamespace::MyGem do
-      it_should_behave_like 'Metasploit
+      it_should_behave_like 'Metasploit::Version VERSION constant'
+      it_should_behave_like 'Metasploit::Version GEM_VERSION constant'
     end
 
 ### Gem Version spec
