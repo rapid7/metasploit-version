@@ -1,70 +1,41 @@
-Feature: 'Metasploit::Version VERSION constant' shared example
+Feature: 'Metasploit::Version Version Module' shared example in branch build on Travis-CI
 
-  The 'Metasploit::Version VERSION constant' shared example will check that the described_class for an RSpec *_spec.rb
-  file has a VERSION constant equal to described_class::Version.full, which indicates that VERSION is setup to
-  use the full module method.
+  The 'Metasploit::Version Version Module' shared example will check that the described_class for an RSpec *_spec.rb
+  file defines PRERELEASE to match the relative name of branch.
 
   Background:
+    Given a git repository
+    And 2 commits
     Given a file named "lib/my_namespace/my_gem.rb" with:
-    """ruby
-    require 'my_namespace/my_gem/version'
+      """ruby
+      require 'my_namespace/my_gem/version'
 
-    module MyNamespace
-      module MyGem
+      module MyNamespace
+        module MyGem
+        end
       end
-    end
-    """
+      """
     Given a file named "spec/spec_helper.rb" with:
-    """ruby
-    require 'metasploit/version'
-    require 'my_namespace/my_gem'
-
-    Dir[Metasploit::Version.root.join('spec', 'support', '**', '*.rb')].each do |f|
-      require f
-    end
-    """
-    Given a file named "spec/lib/my_namespace/my_gem_spec.rb" with:
-    """ruby
-    require 'spec_helper'
-
-    RSpec.describe MyNamespace::MyGem do
-      it_should_behave_like 'Metasploit::Version VERSION constant'
-    end
-    """
-  Scenario: VERSION is not defined
-    Given a file named "lib/my_namespace/my_gem/version.rb" with:
-    """ruby
-    require 'metasploit/version'
-
-    module MyNamespace
-      module MyGem
-        module Version
-          #
-          # CONSTANTS
-          #
-
-          # The major version number
-          MAJOR = 1
-
-          # The minor version number, scoped to the {MAJOR} version number.
-          MINOR = 2
-
-          # The patch number, scoped to the {MINOR} version number.
-          PATCH = 3
-
-          # The prerelease name of the given {MAJOR}.{MINOR}.{PATCH} version number.  Will not be defined on master.
-          PRERELEASE = 'prerelease'
-        end
-      end
-    end
-    """
-    When I run `rspec spec/lib/my_namespace/my_gem_spec.rb --format documentation`
-    Then the output should contain "expected MyNamespace::MyGem::VERSION to be defined"
-  Scenario: VERSION is not equal to Version.full
-    Given a file named "lib/my_namespace/my_gem/version.rb" with:
       """ruby
       require 'metasploit/version'
+      require 'my_namespace/my_gem'
 
+      Dir[Metasploit::Version.root.join('spec', 'support', '**', '*.rb')].each do |f|
+        require f
+      end
+      """
+    Given a file named "spec/lib/my_namespace/my_gem/version_spec.rb" with:
+      """ruby
+      require 'spec_helper'
+
+      RSpec.describe MyNamespace::MyGem::Version do
+        it_should_behave_like 'Metasploit::Version Version Module'
+      end
+      """
+
+  Scenario Outline: PRERELEASE defined as branch relative name
+    Given a file named "lib/my_namespace/my_gem/version.rb" with:
+      """ruby
       module MyNamespace
         module MyGem
           module Version
@@ -78,15 +49,11 @@ Feature: 'Metasploit::Version VERSION constant' shared example
             # The minor version number, scoped to the {MAJOR} version number.
             MINOR = 2
 
-            # The patch number, scoped to the {MINOR} version number.
+            # The patch number, scoped to the {MINOR} version number
             PATCH = 3
 
             # The prerelease name of the given {MAJOR}.{MINOR}.{PATCH} version number.  Will not be defined on master.
-            PRERELEASE = 'prerelease'
-
-            #
-            # Module Methods
-            #
+            PRERELEASE = '<prerelease>'
 
             # The full version string, including the {MAJOR}, {MINOR}, {PATCH}, and optionally, the {PRERELEASE} in the
             # {http://semver.org/spec/v2.0.0.html semantic versioning v2.0.0} format.
@@ -112,19 +79,26 @@ Feature: 'Metasploit::Version VERSION constant' shared example
               full.gsub('-', '.pre.')
             end
           end
-
-          VERSION = '7.8.9'
         end
       end
       """
-    When I run `rspec spec/lib/my_namespace/my_gem_spec.rb --format documentation`
-    Then the output should contain "expected MyNamespace::MyGem::VERSION to equal MyNamespace::MyGem::Version.full"
+    And a git checkout of "-b <branch>"
+    When I run `rspec spec/lib/my_namespace/my_gem/version_spec.rb --format documentation`
+    Then the output should contain:
+      """
+            PRERELEASE
+              matches the <type> branch's name
+      """
 
-  Scenario: VERSION is equal to Version.full
+    Examples:
+      | type    | prerelease   | branch                      |
+      | bug     | nasty        | bug/MSP-1234/nasty          |
+      | feature | super-cool   | feature/MSP-1234/super-cool |
+      | staging | rocket-motor | staging/rocket-motor        |
+
+  Scenario Outline: PRERELEASE not defined
     Given a file named "lib/my_namespace/my_gem/version.rb" with:
       """ruby
-      require 'metasploit/version'
-
       module MyNamespace
         module MyGem
           module Version
@@ -138,15 +112,8 @@ Feature: 'Metasploit::Version VERSION constant' shared example
             # The minor version number, scoped to the {MAJOR} version number.
             MINOR = 2
 
-            # The patch number, scoped to the {MINOR} version number.
+            # The patch number, scoped to the {MINOR} version number
             PATCH = 3
-
-            # The prerelease name of the given {MAJOR}.{MINOR}.{PATCH} version number.  Will not be defined on master.
-            PRERELEASE = 'prerelease'
-
-            #
-            # Module Methods
-            #
 
             # The full version string, including the {MAJOR}, {MINOR}, {PATCH}, and optionally, the {PRERELEASE} in the
             # {http://semver.org/spec/v2.0.0.html semantic versioning v2.0.0} format.
@@ -172,9 +139,27 @@ Feature: 'Metasploit::Version VERSION constant' shared example
               full.gsub('-', '.pre.')
             end
           end
-
-          VERSION = Version.full
         end
       end
       """
-    Then I successfully run `rspec spec/lib/my_namespace/my_gem_spec.rb --format documentation`
+    And a git checkout of "-b <branch>"
+    When I run `rspec spec/lib/my_namespace/my_gem/version_spec.rb --format documentation`
+    Then the output should contain "MyNamespace::MyGem::Version it should behave like Metasploit::Version Version Module CONSTANTS PRERELEASE matches the <type> branch's name"
+    And the output should contain:
+      """
+             expected MyNamespace::MyGem::Version::PRERELEASE to be defined.
+             Add the following to MyNamespace::MyGem::Version:
+      """
+    # Can't do a continuous multiline string because editors will truncate whitespace in blank line and it won't match
+    # whitespace in rspec output.
+    And the output should contain:
+      """
+                 # The prerelease version, scoped to the {PATCH} version number.
+                 PRERELEASE = <prerelease>
+      """
+
+    Examples:
+      | type    | prerelease   | branch                      |
+      | bug     | nasty        | bug/MSP-1234/nasty          |
+      | feature | super-cool   | feature/MSP-1234/super-cool |
+      | staging | rocket-motor | staging/rocket-motor        |

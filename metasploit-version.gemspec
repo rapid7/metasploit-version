@@ -5,7 +5,7 @@ require 'metasploit/version/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'metasploit-version'
-  spec.version       = Metasploit::Version::VERSION
+  spec.version       = Metasploit::Version::GEM_VERSION
   spec.authors       = ['Luke Imhoff']
   spec.email         = ['luke_imhoff@rapid7.com']
   spec.summary       = 'Semantic versioning helpers and shared examples'
