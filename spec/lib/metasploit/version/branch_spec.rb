@@ -575,7 +575,7 @@ describe Metasploit::Version::Branch do
           }
 
           it "converts '.pre.' separators from prerelease back to '-'" do
-            expect(prerelease).to eq("early-release")
+            expect(prerelease).to eq('early-release')
           end
         end
       end

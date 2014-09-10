@@ -70,7 +70,7 @@ shared_examples_for 'Metasploit::Version Version Module' do
       # detached HEAD in git
       elsif parsed_branch == 'HEAD'
         it 'has an abbreviated reference that can be parsed for prerelease',
-           pending: "Cannot determine branch name in detached HEAD state.  Set TRAVIS_BRANCH to supply branch name" do
+           pending: 'Cannot determine branch name in detached HEAD state.  Set TRAVIS_BRANCH to supply branch name' do
           fail "Do not know how to parse #{branch.inspect} for PRERELEASE"
         end
       # master
@@ -119,7 +119,7 @@ shared_examples_for 'Metasploit::Version Version Module' do
 
     def expect_method_defined
       expect(defined? described_class.full).to(
-          eq("method"),
+          eq('method'),
           # lambda so expensive message calculation only happens on failure
           ->() {
             "expected #{described_class} to define self.full().\n" \
