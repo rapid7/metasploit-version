@@ -1,6 +1,9 @@
 env:
   global:
     secure: "G0LDGrupZ+RAFzoPwd6bjfrWfwoU/V9RTswQXIUNmi640rW/CP86a8F9hQcAXdUwy7Ag1cwmlEEv2JDDbLopQdNvkh8B7M3PSIpmJWlBsj+UPMMcCz04oYiQB3G6xgYb4xeuY6cNqxiY2rTJMHlfUfTlSJf1Z0dh6hAS3alHpGw="
+  matrix:
+    - RAKE_TASK=cucumber
+    - RAKE_TASK=spec
 language: ruby
 rvm:
 - 1.9.3
@@ -9,3 +12,4 @@ rvm:
 - ruby-head
 - jruby
 - rbx-2.2
+script: "bundle exec rake $RAKE_TASK"
