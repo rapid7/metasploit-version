@@ -5,7 +5,7 @@ module Metasploit::Version::Branch
   JENKINS_PREFIX_REGEXP = %r{(?:ref/remotes/)?}
   PRERELEASE_SEGMENT_REGEXP = /[0-9a-zA-Z]+/
   # Version pattern allowed by Rubygems for pre-release (i.e. summary in BRANCH_REGEXP)
-  PRERELEASE_REGEXP = /(?<prerelease>#{PRERELEASE_SEGMENT_REGEXP}([-.]#{PRERELEASE_SEGMENT_REGEXP})?)/
+  PRERELEASE_REGEXP = /(?<prerelease>#{PRERELEASE_SEGMENT_REGEXP}([-.]#{PRERELEASE_SEGMENT_REGEXP})*)/
 
   STAGING_REGEXP = %r{
     \A
@@ -25,7 +25,7 @@ module Metasploit::Version::Branch
     #{PRERELEASE_REGEXP}
     \z
   }x
-  VERSION_PRERELEASE_SEGMENT_SEPARATOR = /\.pre\./
+  VERSION_PRERELEASE_SEGMENT_SEPARATOR_REGEXP = /\.pre\./
   VERSION_REGEXP = %r{
     \A
     v(?<major>\d+)
@@ -34,10 +34,10 @@ module Metasploit::Version::Branch
     \.
     (?<patch>\d+)
     (?:
-      #{VERSION_PRERELEASE_SEGMENT_SEPARATOR}
+      #{VERSION_PRERELEASE_SEGMENT_SEPARATOR_REGEXP}
       (?<gem_version_prerelease>
         #{PRERELEASE_SEGMENT_REGEXP}
-        (#{VERSION_PRERELEASE_SEGMENT_SEPARATOR}#{PRERELEASE_SEGMENT_REGEXP})*
+        (#{VERSION_PRERELEASE_SEGMENT_SEPARATOR_REGEXP}#{PRERELEASE_SEGMENT_REGEXP})*
       )
     )?
     \z
