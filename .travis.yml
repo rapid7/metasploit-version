@@ -5,6 +5,10 @@ env:
     - RAKE_TASK=cucumber
     - RAKE_TASK=spec
 language: ruby
+matrix:
+  allow_failures:
+    - rvm: ruby-head
+  fast_finish: true
 rvm:
 - 1.9.3
 - 2.0
