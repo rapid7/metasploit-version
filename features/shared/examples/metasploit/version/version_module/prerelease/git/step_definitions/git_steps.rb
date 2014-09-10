@@ -1,6 +1,12 @@
 fail_on_error = true
 
 Given /^a git repository$/ do
+  # git init will fail if account ident it not setup
+  if ENV['TRAVIS'] == 'true'
+    run_simple('git config --global user.email "cucumber@example.com"')
+    run_simple('git config --global user.name "Cucumber"')
+  end
+
   run_simple('git init', fail_on_error)
   path = '.gitignore'
   write_file(path, '')
