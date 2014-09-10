@@ -5,6 +5,7 @@ Feature: 'Metasploit::Version Version Module' shared example in pull request bui
   destination branch being built by the pull request build.
 
   Background:
+    Given I unset the environment variable "TRAVIS_BRANCH"
     Given a file named "lib/my_namespace/my_gem.rb" with:
     """ruby
     require 'my_namespace/my_gem/version'
@@ -31,6 +32,10 @@ Feature: 'Metasploit::Version Version Module' shared example in pull request bui
       it_should_behave_like 'Metasploit::Version Version Module'
     end
     """
+    Given I set the environment variables to:
+      | variable      | value  |
+      | TRAVIS_BRANCH | master |
+
  Scenario: PRERELEASE set to source branch relative name
     Given a file named "lib/my_namespace/my_gem/version.rb" with:
     """ruby
@@ -87,5 +92,5 @@ Feature: 'Metasploit::Version Version Module' shared example in pull request bui
     Then the output should contain:
       """
             PRERELEASE
-              matches the feature branch's name (PENDING: PRERELEASE can only be set appropriately for a merge by merging to the target branch and then updating PRERELEASE on the target branch before committing and/or pushing to github and travis-ci.)
+              is not defined (PENDING: PRERELEASE can only be set appropriately for a merge by merging to the target branch and then updating PRERELEASE on the target branch before committing and/or pushing to github and travis-ci.)
       """
