@@ -4,6 +4,7 @@ Feature: 'Metasploit::Version Version Module' shared example in master build loc
   file does not define PRERELEASE.
 
   Background:
+    Given I unset the environment variable "TRAVIS_BRANCH"
     Given a git repository
     Given a git checkout of "master"
     Given a file named "lib/my_namespace/my_gem.rb" with:

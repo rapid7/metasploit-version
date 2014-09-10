@@ -5,6 +5,7 @@ Feature: 'Metasploit::Version Version Module' shared example in detached head bu
   does not correspond to a pre-existing branch or tag.
 
   Background:
+    Given I unset the environment variable "TRAVIS_BRANCH"
     Given a git repository
     And 2 commits
     And a git checkout of "HEAD^"

@@ -4,6 +4,7 @@ Feature: 'Metasploit::Version Version Module' shared example in branch build on 
   file defines PRERELEASE to match the relative name of branch.
 
   Background:
+    Given I unset the environment variable "TRAVIS_BRANCH"
     Given a git repository
     And 2 commits
     Given a file named "lib/my_namespace/my_gem.rb" with:
