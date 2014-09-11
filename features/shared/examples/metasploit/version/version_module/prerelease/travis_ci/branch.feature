@@ -4,6 +4,9 @@ Feature: 'Metasploit::Version Version Module' shared example in branch build on 
   file defines PRERELEASE to match the relative name of branch.
 
   Background:
+    Given I set the environment variables to:
+      | variable            | value |
+      | TRAVIS_PULL_REQUEST | false |
     Given a file named "lib/my_namespace/my_gem.rb" with:
       """ruby
       require 'my_namespace/my_gem/version'

@@ -4,6 +4,9 @@ Feature: 'Metasploit::Version Version Module' shared example in tag build on Tra
   file defines PRERELEASE to match the prerelease part of the tag converted from the gem prerelease format.
 
   Background:
+    Given I set the environment variables to:
+      | variable            | value |
+      | TRAVIS_PULL_REQUEST | false |
     Given a file named "lib/my_namespace/my_gem.rb" with:
       """ruby
       require 'my_namespace/my_gem/version'

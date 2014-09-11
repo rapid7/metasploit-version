@@ -5,6 +5,9 @@ Feature: 'Metasploit::Version Version Module' shared example in master build loc
 
   Background:
     Given I unset the environment variable "TRAVIS_BRANCH"
+    Given I set the environment variables to:
+      | variable            | value |
+      | TRAVIS_PULL_REQUEST | false |
     Given a git repository
     Given a git checkout of "master"
     Given a file named "lib/my_namespace/my_gem.rb" with:

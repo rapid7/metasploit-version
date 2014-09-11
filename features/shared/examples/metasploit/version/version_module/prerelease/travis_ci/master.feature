@@ -31,8 +31,9 @@ Feature: 'Metasploit::Version Version Module' shared example in master build on 
     end
     """
     Given I set the environment variables to:
-      | variable      | value   |
-      | TRAVIS_BRANCH | master  |
+      | variable            | value  |
+      | TRAVIS_BRANCH       | master |
+      | TRAVIS_PULL_REQUEST | false  |
   Scenario: PRERELEASE defined
     Given a file named "lib/my_namespace/my_gem/version.rb" with:
     """ruby
