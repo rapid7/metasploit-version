@@ -5,9 +5,9 @@ describe Metasploit::Version do
   it_should_behave_like 'Metasploit::Version VERSION constant'
 
   context 'root' do
-    subject(:root) do
+    subject(:root) {
       described_class.root
-    end
+    }
 
     it { should be_a Pathname }
 

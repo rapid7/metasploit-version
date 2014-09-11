@@ -1,25 +1,25 @@
 shared_examples_for 'Metasploit::Version Version Module' do
   context 'CONSTANTS' do
     context 'MAJOR' do
-      subject(:major) do
+      subject(:major) {
         described_class::MAJOR
-      end
+      }
 
       it { should be_an Integer }
     end
 
     context 'MINOR' do
-      subject(:minor) do
+      subject(:minor) {
         described_class::MINOR
-      end
+      }
 
       it { should be_a Integer }
     end
 
     context 'PATCH' do
-      subject(:patch) do
+      subject(:patch) {
         described_class::PATCH
-      end
+      }
 
       it { should be_a Integer }
     end
@@ -35,9 +35,9 @@ shared_examples_for 'Metasploit::Version Version Module' do
     end
 
     context 'PRERELEASE' do
-      subject(:prerelease) do
+      subject(:prerelease) {
         described_class::PRERELEASE
-      end
+      }
 
       branch = Metasploit::Version::Branch.current
       parsed_branch = Metasploit::Version::Branch.parse(branch)

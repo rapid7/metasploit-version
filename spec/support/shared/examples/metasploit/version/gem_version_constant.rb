@@ -1,9 +1,9 @@
 shared_examples_for 'Metasploit::Version GEM_VERSION constant' do
   context 'CONSTANTS' do
     context 'GEM_VERSION' do
-      subject(:version) do
+      subject(:version) {
         described_class::GEM_VERSION
-      end
+      }
 
       it 'is defined' do
         expect(defined? described_class::GEM_VERSION).not_to be_nil, "expected #{described_class}::GEM_VERSION to be defined"
