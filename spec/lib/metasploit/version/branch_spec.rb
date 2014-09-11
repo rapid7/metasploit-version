@@ -304,8 +304,38 @@ describe Metasploit::Version::Branch do
     end
 
     context 'with staging branch' do
+      #
+      # Shared examples
+      #
+
+      shared_examples_for 'staging branch' do
+        it { is_expected.to be_a(Hash) }
+
+        context '[:prerelease]' do
+          subject(:prerelease) {
+            parse[:prerelease]
+          }
+
+          it "is name after 'staging/'" do
+            expect(prerelease).to eq(expected_prerelease)
+          end
+        end
+
+        context '[:type]' do
+          subject(:type) {
+            parse[:type]
+          }
+
+          it { is_expected.to eq(expected_type) }
+        end
+      end
+
+      #
+      # lets
+      #
+
       let(:branch) {
-        "#{expected_type}/#{expected_prerelease}"
+        "#{jenkins_prefix}#{expected_type}/#{expected_prerelease}"
       }
 
       let(:expected_prerelease) {
@@ -316,74 +346,80 @@ describe Metasploit::Version::Branch do
         'staging'
       }
 
-      it { is_expected.to be_a(Hash) }
-
-      context '[:prerelease]' do
-        subject(:prerelease) {
-          parse[:prerelease]
+      context 'with Jenkins prefix' do
+        let(:jenkins_prefix) {
+          'ref/remotes/origin/'
         }
 
-        it "is name after 'staging/'" do
-          expect(prerelease).to eq(expected_prerelease)
-        end
+        it_should_behave_like 'staging branch'
       end
 
-      context '[:type]' do
-        subject(:type) {
-          parse[:type]
+      context 'without Jenkins prefix' do
+        let(:jenkins_prefix) {
+          ''
         }
 
-        it { is_expected.to eq(expected_type) }
+        it_should_behave_like 'staging branch'
       end
     end
 
     context 'with story branch' do
-      context 'for a bug' do
-        let(:expected_prerelease) {
-          'nasty'
-        }
-
-        let(:expected_type) {
-          'bug'
-        }
-
+      shared_examples_for 'story branch' do
         context 'with story' do
+          shared_examples_for 'with story' do
+            it { should be_a Hash }
+
+            context '[:prerelease]' do
+              subject(:prerelease) {
+                parse[:prerelease]
+              }
+
+              it "is name after last '/'" do
+                expect(prerelease).to eq(expected_prerelease)
+              end
+            end
+
+            context '[:story]' do
+              subject(:story) {
+                parse[:story]
+              }
+
+              it 'is middle name' do
+                expect(story).to eq(expected_story)
+              end
+            end
+
+            context '[:type]' do
+              subject(:type) {
+                parse[:type]
+              }
+
+              it { is_expected.to eq(expected_type) }
+            end
+          end
+
           let(:expected_story) {
             'MSP-1234'
           }
 
           let(:branch) {
-            "#{expected_type}/#{expected_story}/#{expected_prerelease}"
+            "#{jenkins_prefix}#{expected_type}/#{expected_story}/#{expected_prerelease}"
           }
 
-          it { should be_a Hash }
-
-          context '[:prerelease]' do
-            subject(:prerelease) {
-              parse[:prerelease]
+          context 'with Jenkins prefix' do
+            let(:jenkins_prefix) {
+              'ref/remotes/upstream/'
             }
 
-            it "is name after last '/'" do
-              expect(prerelease).to eq(expected_prerelease)
-            end
+            it_should_behave_like 'with story'
           end
 
-          context '[:story]' do
-            subject(:story) {
-              parse[:story]
+          context 'without Jenkins prefix' do
+            let(:jenkins_prefix) {
+              ''
             }
 
-            it 'is middle name' do
-              expect(story).to eq(expected_story)
-            end
-          end
-
-          context '[:type]' do
-            subject(:type) {
-              parse[:type]
-            }
-
-            it { is_expected.to eq(expected_type) }
+            it_should_behave_like 'with story'
           end
         end
 
@@ -394,6 +430,18 @@ describe Metasploit::Version::Branch do
 
           it { is_expected.to be_nil }
         end
+      end
+
+      context 'for a bug' do
+        let(:expected_prerelease) {
+          'nasty'
+        }
+
+        let(:expected_type) {
+          'bug'
+        }
+
+        it_should_behave_like 'story branch'
       end
 
       context 'for a chore' do
@@ -405,56 +453,10 @@ describe Metasploit::Version::Branch do
           'chore'
         }
 
-        context 'with story' do
-          let(:expected_story) {
-            'MSP-1234'
-          }
-
-          let(:branch) {
-            "#{expected_type}/#{expected_story}/#{expected_prerelease}"
-          }
-
-          it { should be_a Hash }
-
-          context '[:prerelease]' do
-            subject(:prerelease) {
-              parse[:prerelease]
-            }
-
-            it "is name after last '/'" do
-              expect(prerelease).to eq(expected_prerelease)
-            end
-          end
-
-          context '[:story]' do
-            subject(:story) {
-              parse[:story]
-            }
-
-            it 'is middle name' do
-              expect(story).to eq(expected_story)
-            end
-          end
-
-          context '[:type]' do
-            subject(:type) {
-              parse[:type]
-            }
-
-            it { is_expected.to eq(expected_type) }
-          end
-        end
-
-        context 'without story' do
-          let(:branch) {
-            "#{expected_type}/#{expected_prerelease}"
-          }
-
-          it { is_expected.to be_nil }
-        end
+        it_should_behave_like 'story branch'
       end
 
-            context 'for a bug' do
+      context 'for a bug' do
         let(:expected_prerelease) {
           'cool-new'
         }
@@ -463,53 +465,7 @@ describe Metasploit::Version::Branch do
           'feature'
         }
 
-        context 'with story' do
-          let(:expected_story) {
-            'MSP-1234'
-          }
-
-          let(:branch) {
-            "#{expected_type}/#{expected_story}/#{expected_prerelease}"
-          }
-
-          it { should be_a Hash }
-
-          context '[:prerelease]' do
-            subject(:prerelease) {
-              parse[:prerelease]
-            }
-
-            it "is name after last '/'" do
-              expect(prerelease).to eq(expected_prerelease)
-            end
-          end
-
-          context '[:story]' do
-            subject(:story) {
-              parse[:story]
-            }
-
-            it 'is middle name' do
-              expect(story).to eq(expected_story)
-            end
-          end
-
-          context '[:type]' do
-            subject(:type) {
-              parse[:type]
-            }
-
-            it { is_expected.to eq(expected_type) }
-          end
-        end
-
-        context 'without story' do
-          let(:branch) {
-            "#{expected_type}/#{expected_prerelease}"
-          }
-
-          it { is_expected.to be_nil }
-        end
+        it_should_behave_like 'story branch'
       end
     end
 

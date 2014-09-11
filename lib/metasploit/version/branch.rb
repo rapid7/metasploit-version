@@ -6,9 +6,9 @@ module Metasploit::Version::Branch
   # CONSTANTS
   #
 
-  # Regular expression that matches, but does not capture an optional prefix of 'ref/remotes' for when a branch name is
-  # fully qualified on Jenkins.
-  JENKINS_PREFIX_REGEXP = %r{(?:ref/remotes/)?}
+  # Regular expression that matches, but does not capture an optional prefix of `ref/remotes` for when a branch name is
+  # fully qualified on Jenkins. Remote name after `ref/remotes` is captured in `:remote` group.
+  JENKINS_PREFIX_REGEXP = %r{(?:ref/remotes/(?<remote>[^/]+)/)?}
 
   # Matches runs of alphanumeric characters that are valid in prerelease segments.  Prerelease segments must be
   # separated by `.` or `-`.
