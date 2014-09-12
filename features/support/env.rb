@@ -16,12 +16,16 @@ require 'aruba/cucumber'
 require 'aruba/jruby'
 
 Before do |scenario|
-  command_name = scenario.name
+  command_name = case scenario
+                   when Cucumber::Ast::Scenario, Cucumber::Ast::ScenarioOutline
+                     "#{scenario.feature.title} #{scenario.name}"
+                   when Cucumber::Ast::OutlineTable::ExampleRow
+                     scenario_outline = scenario.scenario_outline
 
-  # Support scenario outlines (scenarios that have "example" tables)
-  if scenario.respond_to?(:scenario_outline)
-    command_name = "#{scenario.scenario_outline.name} #{command_name}"
-  end
+                     "#{scenario_outline.feature.title} #{scenario_outline.name} #{scenario.name}"
+                   else
+                     raise TypeError, "Don't know how to extract command name from #{scenario.class}"
+                 end
 
   # Used in simplecov_setup so that each scenario has a different name and their coverage results are merged instead
   # of overwriting each other as 'Cucumber Features'
