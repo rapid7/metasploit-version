@@ -167,3 +167,65 @@ Feature: 'Metasploit::Version Version Module' shared example in branch build on 
       | bug     | nasty        | bug/MSP-1234/nasty          |
       | feature | super-cool   | feature/MSP-1234/super-cool |
       | staging | rocket-motor | staging/rocket-motor        |
+
+  Scenario Outline: Story branch without a story ID
+    Given a file named "lib/my_namespace/my_gem/version.rb" with:
+    """ruby
+      module MyNamespace
+        module MyGem
+          module Version
+            #
+            # CONSTANTS
+            #
+
+            # The major version number
+            MAJOR = 1
+
+            # The minor version number, scoped to the {MAJOR} version number.
+            MINOR = 2
+
+            # The patch number, scoped to the {MINOR} version number.
+            PATCH = 3
+
+            # The prerelease version, scoped to the {PATCH} version number.
+            PRERELEASE = '<prerelease>'
+
+            # The full version string, including the {MAJOR}, {MINOR}, {PATCH}, and optionally, the {PRERELEASE} in the
+            # {http://semver.org/spec/v2.0.0.html semantic versioning v2.0.0} format.
+            #
+            # @return [String] '{MAJOR}.{MINOR}.{PATCH}' on master.  '{MAJOR}.{MINOR}.{PATCH}-{PRERELEASE}' on any branch
+            #   other than master.
+            def self.full
+              version = "#{MAJOR}.#{MINOR}.#{PATCH}"
+
+              if defined? PRERELEASE
+                version = "#{version}-#{PRERELEASE}"
+              end
+
+              version
+            end
+
+            # The full gem version string, including the {MAJOR}, {MINOR}, {PATCH}, and optionally, the {PRERELEASE} in the
+            # {http://guides.rubygems.org/specification-reference/#version RubyGems versioning} format.
+            #
+            # @return [String] '{MAJOR}.{MINOR}.{PATCH}' on master.  '{MAJOR}.{MINOR}.{PATCH}.{PRERELEASE}' on any branch
+            #   other than master.
+            def self.gem
+              full.gsub('-', '.pre.')
+            end
+          end
+        end
+      end
+      """
+    And a git checkout of "-b <branch>"
+    When I run `rspec spec/lib/my_namespace/my_gem/version_spec.rb --format documentation`
+    Then the output should contain:
+      """
+      Do not know how to parse "<branch>" for PRERELEASE
+      """
+
+    Examples:
+      | prerelease | branch             |
+      | nasty      | bug/nasty          |
+      | recurring  | chore/recurring    |
+      | super-cool | feature/super-cool |
