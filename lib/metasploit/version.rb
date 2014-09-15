@@ -15,5 +15,6 @@ module Metasploit
   # Namespace for this gem.
   module Version
     autoload :Branch, 'metasploit/version/branch'
+    autoload :CLI, 'metasploit/version/cli'
   end
 end

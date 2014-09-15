@@ -33,4 +33,5 @@ Gem::Specification.new do |spec|
   end
 
   spec.add_runtime_dependency 'rspec'
+  spec.add_runtime_dependency 'thor'
 end
