@@ -14,7 +14,7 @@ matrix:
   include:
     - rvm: 2.1
       env: RAKE_TASK=yard
-    - rmv: jruby
+    - rvm: jruby
       env: RAKE_TASK=yard
 rvm:
 - 1.9.3
