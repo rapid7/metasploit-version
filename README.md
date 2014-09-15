@@ -30,8 +30,6 @@ Your gem's version.rb file should have a `Version` `Module` that defines the par
       module MyGem
         # Holds components of {VERSION} as defined by {http://semver.org/spec/v2.0.0.html semantic versioning v2.0.0}.
         module Version
-          extend Metasploit::Version::Full
-
           #
           # CONSTANTS
           #
@@ -45,11 +43,48 @@ Your gem's version.rb file should have a `Version` `Module` that defines the par
           # The patch number, scoped to the {MINOR} version number.
           PATCH = 1
 
-          # The prerelease name of the given {MAJOR}.{MINOR}.{PATCH} version number.  Will not be defined on master.
+          # The prerelease version, scoped to the {PATCH} version number.
           PRERELEASE = '<relative-name>'
+          
+          #
+          # Module Methods
+          #
+    
+          # The full version string, including the {MyNamespace::MyGem::Version::MAJOR},
+          # {MyNamespace::MyGem::Version::MINOR}, {MyNamespace::MyGem::Version::PATCH}, and optionally, the
+          # `MyNamespace::MyGem::Version::PRERELEASE` in the
+          # {http://semver.org/spec/v2.0.0.html semantic versioning v2.0.0} format.
+          #
+          # @return [String] '{MyNamespace::MyGem::Version::MAJOR}.{MyNamespace::MyGem::Version::MINOR}.{MyNamespace::MyGem::Version::PATCH}'
+          #   on master.  '{MyNamespace::MyGem::Version::MAJOR}.{MyNamespace::MyGem::Version::MINOR}.{MyNamespace::MyGem::Version::PATCH}-PRERELEASE'
+          #   on any branch other than master.
+          def self.full
+            version = "#{MAJOR}.#{MINOR}.#{PATCH}"
+    
+            if defined? PRERELEASE
+              version = "#{version}-#{PRERELEASE}"
+            end
+    
+            version
+          end
+    
+          # The full gem version string, including the {MyNamespace::MyGem::Version::MAJOR},
+          # {MyNamespace::MyGem::Version::MINOR}, {MyNamespace::MyGem::Version::PATCH}, and optionally, the
+          # `MyNamespace::MyGem::Version::PRERELEASE` in the
+          # {http://guides.rubygems.org/specification-reference/#version RubyGems versioning} format.
+          #
+          # @return [String] '{MyNamespace::MyGem::Version::MAJOR}.{MyNamespace::MyGem::Version::MINOR}.{MyNamespace::MyGem::Version::PATCH}'
+          #   on master.  '{MyNamespace::MyGem::Version::MAJOR}.{MyNamespace::MyGem::Version::MINOR}.{MyNamespace::MyGem::Version::PATCH}.PRERELEASE'
+          #   on any branch other than master.
+          def self.gem
+            full.gsub('-', '.pre.')
+          end
         end
 
-        # The full semantic version.
+        # (see Version.gem)
+        GEM_VERSION = Version.gem
+
+        # (see Version.full)
         VERSION = Version.full
       end
     end
