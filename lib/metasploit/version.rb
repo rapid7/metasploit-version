@@ -10,6 +10,7 @@ require 'pathname'
 
 require 'metasploit/version/version'
 
+# Namespace used across all metasploit gems
 module Metasploit
   # Namespace for this gem.
   module Version
