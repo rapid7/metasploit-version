@@ -9,9 +9,9 @@ module Metasploit
       # The major version number.
       MAJOR = 0
       # The minor version number, scoped to the {MAJOR} version number.
-      MINOR = 0
+      MINOR = 1
       # The patch number, scoped to the {MINOR} version number.
-      PATCH = 2
+      PATCH = 0
       # The prerelease version, scoped to the {PATCH} version number.
       PRERELEASE = 'metasploit-yard'
 
