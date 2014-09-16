@@ -49,4 +49,80 @@ describe Metasploit::Version::CLI do
       end
     end
   end
+
+  context '#ensure_development_dependency' do
+    subject(:ensure_development_dependency) {
+      cli.send(:ensure_development_dependency)
+    }
+
+    #
+    # lets
+    #
+
+    let(:gemspec) {
+      Tempfile.new(['gem', '.gemspec']).tap { |tempfile|
+        tempfile.write(
+<<EOS
+Gem::Specification.new do |spec|
+#{line}
+end
+EOS
+        )
+        tempfile.flush
+      }
+    }
+
+    #
+    # Callbacks
+    #
+
+    before(:each) do
+      expect(cli).to receive(:gemspec_path).and_return(gemspec.path)
+    end
+
+    context "with `spec.add_development_dependency 'metasploit-version'`" do
+      let(:line) {
+        "  spec.add_development_dependency 'metasploit-version'"
+      }
+
+      it 'adds semantic version requirement' do
+        ensure_development_dependency
+
+        gemspec_after = File.read(gemspec.path)
+
+        expect(gemspec_after.scan('metasploit-version').length).to eq(1)
+        expect(gemspec_after).to match(/spec\.add_development_dependency 'metasploit-version', '~> #{Metasploit::Version::Version::MAJOR}\.#{Metasploit::Version::Version::MINOR}\.#{Metasploit::Version::Version::PATCH}'/)
+      end
+    end
+
+    context "with `spec.add_development_dependency 'metasploit-version', <requirements>`" do
+      let(:line) {
+        "  spec.add_development_dependency 'metasploit-version', '~> 0.0.0'"
+      }
+
+      it 'changes semantic version requirement' do
+        ensure_development_dependency
+
+        gemspec_after = File.read(gemspec.path)
+
+        expect(gemspec_after.scan('metasploit-version').length).to eq(1)
+        expect(gemspec_after).to match(/spec\.add_development_dependency 'metasploit-version', '~> #{Metasploit::Version::Version::MAJOR}\.#{Metasploit::Version::Version::MINOR}\.#{Metasploit::Version::Version::PATCH}'/)
+      end
+    end
+
+    context "without `spec.add_development_dependency 'metasploit-version'`" do
+      let(:line) {
+        ''
+      }
+
+      it 'adds metaspoit-version as a development dependency' do
+        ensure_development_dependency
+
+        gemspec_after = File.read(gemspec.path)
+
+        expect(gemspec_after.scan('metasploit-version').length).to eq(1)
+        expect(gemspec_after).to match(/spec\.add_development_dependency 'metasploit-version', '~> #{Metasploit::Version::Version::MAJOR}\.#{Metasploit::Version::Version::MINOR}\.#{Metasploit::Version::Version::PATCH}'/)
+      end
+    end
+  end
 end
