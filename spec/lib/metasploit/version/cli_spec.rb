@@ -125,4 +125,89 @@ EOS
       end
     end
   end
+
+  context '#gemspec_path' do
+    subject(:gemspec_path) {
+      cli.send(:gemspec_path)
+    }
+
+    #
+    # Callbacks
+    #
+
+    around(:each) do |example|
+      Dir.mktmpdir do |directory|
+        Dir.chdir(directory) do
+          example.run
+        end
+      end
+    end
+
+    context 'with 0 gemspecs' do
+      it 'print that no gemspecs were found' do
+        expect(cli.shell).to receive(:say).with('No gemspec found')
+
+        expect {
+          gemspec_path
+        }.to raise_error(SystemExit)
+      end
+
+      it 'exits with non-zero status' do
+        expect {
+          gemspec_path
+        }.to raise_error(SystemExit) { |error|
+          expect(error.status).not_to eq(0)
+        }
+      end
+    end
+
+    context 'with 1 gemspec' do
+      #
+      # lets
+      #
+
+      let(:expected_path) {
+        'newgem.gemspec'
+      }
+
+      #
+      # Callbacks
+      #
+
+      before(:each) do
+        File.write(expected_path, '')
+      end
+
+      it 'is relative path to gemspec' do
+        expect(gemspec_path).to eq(expected_path)
+      end
+    end
+
+    context 'with more than 1 gemspec' do
+      #
+      # Callbacks
+      #
+
+      before(:each) do
+        File.write('first.gemspec', '')
+        File.write('second.gemspec',  '')
+      end
+
+      it 'print that too many gemspecs were found' do
+        expect(cli.shell).to receive(:say).with('Too many gemspecs')
+
+        expect {
+          gemspec_path
+        }.to raise_error(SystemExit)
+      end
+
+      it 'exits with non-zero status' do
+        expect {
+          gemspec_path
+        }.to raise_error(SystemExit) { |error|
+          expect(error.status).not_to eq(0)
+        }
+      end
+    end
+  end
 end
