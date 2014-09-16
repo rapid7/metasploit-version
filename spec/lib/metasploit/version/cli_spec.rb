@@ -1,6 +1,10 @@
 require 'spec_helper'
 
 describe Metasploit::Version::CLI do
+  subject(:cli) {
+    described_class.new
+  }
+
   context 'CONSTANTS' do
     context 'GEM_NAME' do
       subject(:gem_name) {
@@ -29,6 +33,20 @@ describe Metasploit::Version::CLI do
 
       it { is_expected.to match(%q{spec.add_development_dependency 'metasploit-version'})}
       it { is_expected.to match(%q{spec.add_development_dependency "metasploit-version"})}
+    end
+  end
+
+  context 'commands' do
+    context '#install' do
+      subject(:install) {
+        cli.install
+      }
+
+      it 'calls #ensure_development_dependency' do
+        expect(cli).to receive(:ensure_development_dependency)
+
+        install
+      end
     end
   end
 end
