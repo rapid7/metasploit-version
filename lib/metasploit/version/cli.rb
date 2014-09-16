@@ -41,13 +41,6 @@ class Metasploit::Version::CLI < Thor
   end
 
   no_commands do
-    def development_dependency?
-      gemspec_content = File.read(gemspec_path)
-      match = gemspec_content.match(DEVELOPMENT_DEPENDENCY_REGEXP)
-
-      !match.nil?
-    end
-
     def ensure_development_dependency
       path = gemspec_path
       gem_specification = Gem::Specification.load(path)
