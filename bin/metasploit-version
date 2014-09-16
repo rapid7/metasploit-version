@@ -4,7 +4,7 @@ require 'rubygems'
 
 begin
   require 'metasploit/version/cli'
-rescue LoadeError
+rescue LoadError
   warn 'Could not load "metasploit/version/cli"'
   exit -1
 end
