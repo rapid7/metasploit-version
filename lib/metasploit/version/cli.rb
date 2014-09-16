@@ -40,82 +40,95 @@ class Metasploit::Version::CLI < Thor
     ensure_development_dependency
   end
 
-  no_commands do
-    def ensure_development_dependency
-      path = gemspec_path
-      gem_specification = Gem::Specification.load(path)
+  private
 
-      metasploit_version = gem_specification.dependencies.find { |dependency|
-        dependency.name == GEM_NAME
-      }
+  # Ensures that the {#gemspec_path} contains a development dependency on {GEM_NAME}.
+  #
+  # Adds `spec.add_development_dependency 'metasploit_version', '~> <semantic version requirement>'` if {#gemspec_path}
+  # does not have such an entry.  Otherwise, updates the `<semantic version requirement>` to match this version of
+  # `metasploit-version`.
+  #
+  # @return [void]
+  # @raise (see #gemspec_path)
+  def ensure_development_dependency
+    path = gemspec_path
+    gem_specification = Gem::Specification.load(path)
 
+    metasploit_version = gem_specification.dependencies.find { |dependency|
+      dependency.name == GEM_NAME
+    }
+
+    lines = []
+
+    if metasploit_version
+      if metasploit_version.requirements_list.include? '>= 0'
+        shell.say "Adding #{GEM_NAME} as a development dependency to "
+      else
+        shell.say "Updating #{GEM_NAME} requirements in "
+      end
+
+      shell.say path
+
+      File.open(path) do |f|
+        f.each_line do |line|
+          match = line.match(DEVELOPMENT_DEPENDENCY_REGEXP)
+
+          if match
+            lines << DEVELOPMENT_DEPENDENCY_LINE
+          else
+            lines << line
+          end
+        end
+      end
+    else
+      end_index = nil
       lines = []
 
-      if metasploit_version
-        if metasploit_version.requirements_list.include? '>= 0'
-          shell.say "Adding #{GEM_NAME} as a development dependency to "
-        else
-          shell.say "Updating #{GEM_NAME} requirements in "
-        end
+      open(path) do |f|
+        line_index = 0
 
-        shell.say path
+        f.each_line do |line|
+          lines << line
 
-        File.open(path) do |f|
-          f.each_line do |line|
-            match = line.match(DEVELOPMENT_DEPENDENCY_REGEXP)
-
-            if match
-              lines << DEVELOPMENT_DEPENDENCY_LINE
-            else
-              lines << line
-            end
+          if line =~ /^\s*end\s*$/
+            end_index = line_index
           end
+
+          line_index += 1
         end
-      else
-        end_index = nil
-        lines = []
-
-        open(path) do |f|
-          line_index = 0
-
-          f.each_line do |line|
-            lines << line
-
-            if line =~ /^\s*end\s*$/
-              end_index = line_index
-            end
-
-            line_index += 1
-          end
-        end
-
-        lines.insert(end_index, DEVELOPMENT_DEPENDENCY_LINE)
       end
 
-      File.open(path, 'w') do |f|
-        lines.each do |line|
-          f.write(line)
-        end
-      end
+      lines.insert(end_index, DEVELOPMENT_DEPENDENCY_LINE)
     end
 
-    def gemspec_path
-      unless instance_variable_defined? :@gemspec
-        paths = Dir['*.gemspec']
-        path_count = paths.length
+    File.open(path, 'w') do |f|
+      lines.each do |line|
+        f.write(line)
+      end
+    end
+  end
 
-        if path_count < 1
-          shell.say 'No gemspec found'
-          exit 1
-        elsif path_count > 1
-          shell.say 'Too many gemspecs'
-          exit 1
-        end
+  # The name of the gemspec in the current working directory.
+  #
+  # @return [String] relative path to the current working directory's gemspec.
+  # @raise [SystemExit] if no gemspec is found
+  # @raise [SystemExit] if more than 1 gemspec is found
+  def gemspec_path
+    unless instance_variable_defined? :@gemspec
+      paths = Dir['*.gemspec']
+      path_count = paths.length
 
-        @gemspec_path = paths.first
+      if path_count < 1
+        shell.say 'No gemspec found'
+        exit 1
+      elsif path_count > 1
+        shell.say 'Too many gemspecs'
+        exit 1
       end
 
-      @gemspec_path
+      @gemspec_path = paths.first
     end
+
+    @gemspec_path
   end
 end
