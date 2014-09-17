@@ -9,21 +9,24 @@ module Metasploit
       # The major version number.
       MAJOR = 0
       # The minor version number, scoped to the {MAJOR} version number.
-      MINOR = 0
+      MINOR = 1
       # The patch number, scoped to the {MINOR} version number.
-      PATCH = 1
+      PATCH = 0
       # The prerelease version, scoped to the {PATCH} version number.
-      PRERELEASE = 'port'
+      PRERELEASE = 'metasploit-yard'
 
       #
       # Module Methods
       #
 
-      # The full version string, including the {MAJOR}, {MINOR}, {PATCH}, and optionally, the {PRERELEASE} in the
+      # The full version string, including the {Metasploit::Version::Version::MAJOR},
+      # {Metasploit::Version::Version::MINOR}, {Metasploit::Version::Version::PATCH}, and optionally, the
+      # `Metasploit::Version::Version::PRERELEASE` in the
       # {http://semver.org/spec/v2.0.0.html semantic versioning v2.0.0} format.
       #
-      # @return [String] '{MAJOR}.{MINOR}.{PATCH}' on master.  '{MAJOR}.{MINOR}.{PATCH}-{PRERELEASE}' on any branch
-      #   other than master.
+      # @return [String] '{Metasploit::Version::Version::MAJOR}.{Metasploit::Version::Version::MINOR}.{Metasploit::Version::Version::PATCH}' on master.
+      #   '{Metasploit::Version::Version::MAJOR}.{Metasploit::Version::Version::MINOR}.{Metasploit::Version::Version::PATCH}-PRERELEASE'
+      #   on any branch other than master.
       def self.full
         version = "#{MAJOR}.#{MINOR}.#{PATCH}"
 
@@ -34,20 +37,23 @@ module Metasploit
         version
       end
 
-      # The full gem version string, including the {MAJOR}, {MINOR}, {PATCH}, and optionally, the {PRERELEASE} in the
+      # The full gem version string, including the {Metasploit::Version::Version::MAJOR},
+      # {Metasploit::Version::Version::MINOR}, {Metasploit::Version::Version::PATCH}, and optionally, the
+      # `Metasploit::Version::Version::PRERELEASE` in the
       # {http://guides.rubygems.org/specification-reference/#version RubyGems versioning} format.
       #
-      # @return [String] '{MAJOR}.{MINOR}.{PATCH}' on master.  '{MAJOR}.{MINOR}.{PATCH}.{PRERELEASE}' on any branch
-      #   other than master.
+      # @return [String] '{Metasploit::Version::Version::MAJOR}.{Metasploit::Version::Version::MINOR}.{Metasploit::Version::Version::PATCH}'
+      #   on master.  '{Metasploit::Version::Version::MAJOR}.{Metasploit::Version::Version::MINOR}.{Metasploit::Version::Version::PATCH}.PRERELEASE'
+      #   on any branch other than master.
       def self.gem
         full.gsub('-', '.pre.')
       end
     end
 
-    # @see Version.gem
+    # (see Version.gem)
     GEM_VERSION = Version.gem
 
-    # @see Version.full
+    # (see Version.full)
     VERSION = Version.full
   end
 end

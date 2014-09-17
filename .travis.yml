@@ -9,6 +9,13 @@ matrix:
   allow_failures:
     - rvm: ruby-head
   fast_finish: true
+  # documentation coverage is not influenced by ruby version, but the dependencies differ for MRI and JRuby, so
+  # rake yard for both.
+  include:
+    - rvm: 2.1
+      env: RAKE_TASK=yard
+    - rvm: jruby
+      env: RAKE_TASK=yard
 rvm:
 - 1.9.3
 - 2.0

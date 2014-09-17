@@ -21,7 +21,17 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "bundler", "~> 1.5"
+  spec.add_development_dependency 'metasploit-yard', '~> 1.0'
   spec.add_development_dependency "rake"
+
+
+  if RUBY_PLATFORM =~ /java/
+    # markdown library for YARD to enable proper parsing of README.md and CONTRIBUTING.md
+    spec.add_development_dependency 'kramdown'
+  else
+    # markdown library for YARD to enable proper parsing of README.md and CONTRIBUTING.md
+    spec.add_development_dependency 'redcarpet'
+  end
 
   spec.add_runtime_dependency 'rspec'
 end
