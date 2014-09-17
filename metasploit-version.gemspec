@@ -4,13 +4,15 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'metasploit/version/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "metasploit-version"
-  spec.version       = Metasploit::Version::VERSION
-  spec.authors       = ["Luke Imhoff"]
-  spec.email         = ["luke_imhoff@rapid7.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
-  spec.homepage      = ""
+  spec.name          = 'metasploit-version'
+  spec.version       = Metasploit::Version::GEM_VERSION
+  spec.authors       = ['Luke Imhoff']
+  spec.email         = ['luke_imhoff@rapid7.com']
+  spec.summary       = 'Semantic versioning helpers and shared examples'
+  spec.description   = "Metasploit::Version::Full for deriving String VERSION from constants in Version module and " \
+                       "shared examples: 'Metasploit::Version VERSION constant' to check VERSION and " \
+                       "'Metasploit::Version Version Module' to check Version."
+  spec.homepage      = 'https://github.com/rapid7/metasploit-version'
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
@@ -20,4 +22,6 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 1.5"
   spec.add_development_dependency "rake"
+
+  spec.add_runtime_dependency 'rspec'
 end
