@@ -16,3 +16,7 @@ Gemfile.lock
 # yard
 /.yardoc
 /doc
+
+# RVM management
+.ruby-version
+.ruby-gemset
