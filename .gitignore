@@ -20,3 +20,13 @@ Gemfile.lock
 # RVM management
 .ruby-version
 .ruby-gemset
+
+# Built Rubygems
+pkg/*
+
+# YARD database
+.yardoc
+# coverage report directory for simplecov/Rubymine
+coverage
+# generated yardocs
+doc
