@@ -1,7 +1,12 @@
 #
-# Gems
+# Standard library
 #
 
+require 'pathname'
+
+#
+# Gems
+#
 
 require 'thor'
 
@@ -14,6 +19,8 @@ require 'metasploit/version/version'
 
 # Command-line interface for `metasploit-version`.  Used to run commands for managing the semantic version of a project.
 class Metasploit::Version::CLI < Thor
+  include Thor::Actions
+
   #
   # CONSTANTS
   #
@@ -28,19 +35,67 @@ class Metasploit::Version::CLI < Thor
   DEVELOPMENT_DEPENDENCY_REGEXP = /spec\.add_development_dependency\s+(?<quote>"|')#{GEM_NAME}\k<quote>/
 
   #
+  # Class options
+  #
+
+  class_option :force,
+               default: false,
+               desc: 'Force overwriting conflicting files',
+               type: :boolean
+  class_option :skip,
+               default: false,
+               desc: 'Skip conflicting files',
+               type: :boolean
+
+  #
+  # Configuration
+  #
+
+  root = Pathname.new(__FILE__).parent.parent.parent.parent
+  source_root root.join('app', 'templates')
+
+  #
   # Commands
   #
 
   desc 'install',
-       "Adds 'metasploit-version' as a development dependency in this project's gemspec"
+       "Install metasploit-version and sets up files"
+  long_desc(
+      "Adds 'metasploit-version' as a development dependency in this project's gemspec OR updates the semantic version requirement; " \
+      "adds semantic versioning version.rb file."
+  )
+  option :major,
+         banner: 'MAJOR',
+         default: 0,
+         desc: 'Major version number',
+         type: :numeric
+  option :minor,
+         banner: 'MINOR',
+         default: 0,
+         desc: 'Minor version number, scoped to MAJOR version number.',
+         type: :numeric
+  option :patch,
+         banner: 'PATCH',
+         default: 0,
+         desc: 'Patch version number, scoped to MAJOR and MINOR version numbers.',
+         type: :numeric
   # Adds 'metasploit-version' as a development dependency in this project's gemspec.
   #
   # @return [void]
   def install
     ensure_development_dependency
+    template('lib/versioned/version.rb.tt', "lib/#{namespaced_path}/version.rb")
   end
 
   private
+
+  # Capitalizes words by converting the first character of `word` to upper case.
+  #
+  # @param word [String] a lower case string
+  # @return [String]
+  def capitalize(word)
+    word[0, 1].upcase + word[1 .. -1]
+  end
 
   # Ensures that the {#gemspec_path} contains a development dependency on {GEM_NAME}.
   #
@@ -112,23 +167,80 @@ class Metasploit::Version::CLI < Thor
   #
   # @return [String] relative path to the current working directory's gemspec.
   # @raise [SystemExit] if no gemspec is found
-  # @raise [SystemExit] if more than 1 gemspec is found
   def gemspec_path
     unless instance_variable_defined? :@gemspec
-      paths = Dir['*.gemspec']
-      path_count = paths.length
+      path = "#{name}.gemspec"
 
-      if path_count < 1
+      unless File.exist?(path)
         shell.say 'No gemspec found'
-        exit 1
-      elsif path_count > 1
-        shell.say 'Too many gemspecs'
         exit 1
       end
 
-      @gemspec_path = paths.first
+      @gemspec_path = path
     end
 
     @gemspec_path
+  end
+
+  # The name of the gem.
+  #
+  # @return [String] name of the gem.  Assumed to be the name of the pwd as it should match the repository name.
+  def name
+    @name ||= File.basename(Dir.pwd)
+  end
+
+  # The fully-qualified namespace for the gem.
+  #
+  # @param [String]
+  def namespace_name
+    @namespace_name ||= namespaces.join('::')
+  end
+
+  # List of `Module#name`s making up the {#namespace_name the fully-qualifed namespace for the gem}.
+  #
+  # @return [Array<String>]
+  def namespaces
+    unless instance_variable_defined? :@namespaces
+      underscored_words = name.split('_')
+      capitalized_underscored_words = underscored_words.map { |underscored_word|
+        capitalize(underscored_word)
+      }
+      capitalized_hyphenated_name = capitalized_underscored_words.join
+      hyphenated_words = capitalized_hyphenated_name.split('-')
+
+      @namespaces = hyphenated_words.map { |hyphenated_word|
+        capitalize(hyphenated_word)
+      }
+    end
+
+    @namespaces
+  end
+
+  # The relative path of the gem under `lib`.
+  #
+  # @return [String] Format of `[<parent>/]*<child>`
+  def namespaced_path
+    @namespaced_path ||= name.tr('-', '/')
+  end
+
+  # The prerelease version.
+  #
+  # @return [nil] if on master or HEAD
+  # @return [String] if on a branch
+  def prerelease
+    unless instance_variable_defined? :@prerelease
+      branch = Metasploit::Version::Branch.current
+      parsed = Metasploit::Version::Branch.parse(branch)
+
+      if parsed.is_a? Hash
+        prerelease = parsed[:prerelease]
+
+        if prerelease
+          @prerelease = prerelease
+        end
+      end
+    end
+
+    @prerelease
   end
 end

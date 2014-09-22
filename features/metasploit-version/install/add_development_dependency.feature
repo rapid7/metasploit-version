@@ -12,11 +12,13 @@ Feature: metasploit-version install adds 'metasploit-version' as a development d
   Scenario: Not added to gemspec
     Given I successfully run `bundle gem metasploit_version_install_development_dependency`
     And I cd to "metasploit_version_install_development_dependency"
-    When I successfully run `metasploit-version install`
+    When I successfully run `metasploit-version install --force`
     Then metasploit-version should be development dependency with semantic version restriction in "metasploit_version_install_development_dependency.gemspec"
 
   Scenario: No semantic version restriction
-    Given a file named "metasploit_version_install_development_dependency.gemspec" with:
+    Given I successfully run `bundle gem metasploit_version_install_development_dependency`
+    And I cd to "metasploit_version_install_development_dependency"
+    And I overwrite "metasploit_version_install_development_dependency.gemspec" with:
       """
       # coding: utf-8
 
@@ -40,11 +42,13 @@ Feature: metasploit-version install adds 'metasploit-version' as a development d
         spec.add_development_dependency "rake"
       end
       """
-    When I successfully run `metasploit-version install`
+    When I successfully run `metasploit-version install --force`
     Then metasploit-version should be development dependency with semantic version restriction in "metasploit_version_install_development_dependency.gemspec"
 
   Scenario: Semantic version restriction in gemspec
-    Given a file named "metasploit_version_install_development_dependency.gemspec" with:
+    Given I successfully run `bundle gem metasploit_version_install_development_dependency`
+    And I cd to "metasploit_version_install_development_dependency"
+    And I overwrite "metasploit_version_install_development_dependency.gemspec" with:
       """
       # coding: utf-8
 
@@ -68,5 +72,5 @@ Feature: metasploit-version install adds 'metasploit-version' as a development d
         spec.add_development_dependency "rake"
       end
       """
-    When I successfully run `metasploit-version install`
+    When I successfully run `metasploit-version install --force`
     Then metasploit-version should be development dependency with semantic version restriction in "metasploit_version_install_development_dependency.gemspec"

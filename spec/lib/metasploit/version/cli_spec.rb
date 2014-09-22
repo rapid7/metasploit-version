@@ -44,8 +44,64 @@ describe Metasploit::Version::CLI do
 
       it 'calls #ensure_development_dependency' do
         expect(cli).to receive(:ensure_development_dependency)
+        allow(cli).to receive(:template)
 
         install
+      end
+
+      it 'generates version.rb template' do
+        allow(cli).to receive(:ensure_development_dependency)
+        expect(cli).to receive(:template).with('lib/versioned/version.rb.tt', 'lib/metasploit/version/version.rb')
+
+        install
+      end
+    end
+  end
+
+  context '#capitalize' do
+    subject(:capitalize) {
+      cli.send(:capitalize, word)
+    }
+
+    context 'with single character' do
+      let(:word) {
+        'a'
+      }
+
+      it 'capitalizes letter' do
+        expect(capitalize).to eq('A')
+      end
+    end
+
+    context 'with multiple characters' do
+      context 'with multiple capitals' do
+        let(:word) {
+          'hTML'
+        }
+
+        it 'does not change capitalization of other characters' do
+          expect(capitalize).to eq('HTML')
+        end
+      end
+
+      context 'with underscored' do
+        let(:word) {
+          'underscored_words'
+        }
+
+        it 'uppercases first letter of first word' do
+          expect(capitalize).to eq('Underscored_words')
+        end
+      end
+
+      context 'with hyphenated' do
+        let(:word) {
+          'hyphenated-words'
+        }
+
+        it 'uppercases first letter of the first word' do
+          expect(capitalize).to eq('Hyphenated-words')
+        end
       end
     end
   end
@@ -132,13 +188,25 @@ EOS
     }
 
     #
+    # lets
+    #
+
+    let(:name) {
+      'newgem'
+    }
+
+    #
     # Callbacks
     #
 
     around(:each) do |example|
       Dir.mktmpdir do |directory|
         Dir.chdir(directory) do
-          example.run
+          Dir.mkdir(name)
+
+          Dir.chdir(name) do
+            example.run
+          end
         end
       end
     end
@@ -167,7 +235,7 @@ EOS
       #
 
       let(:expected_path) {
-        'newgem.gemspec'
+        "#{name}.gemspec"
       }
 
       #
@@ -182,32 +250,149 @@ EOS
         expect(gemspec_path).to eq(expected_path)
       end
     end
+  end
 
-    context 'with more than 1 gemspec' do
-      #
-      # Callbacks
-      #
+  context '#name' do
+    subject(:name) do
+      cli.send(:name)
+    end
 
-      before(:each) do
-        File.write('first.gemspec', '')
-        File.write('second.gemspec',  '')
+    #
+    # lets
+    #
+
+    let(:expected_name) {
+      'expected-name'
+    }
+
+    #
+    # Callbacks
+    #
+
+    around(:each) do |example|
+      Dir.mktmpdir do |directory|
+        Dir.chdir(directory) do
+          Dir.mkdir(expected_name)
+
+          Dir.chdir(expected_name) {
+            example.run
+          }
+        end
       end
+    end
 
-      it 'print that too many gemspecs were found' do
-        expect(cli.shell).to receive(:say).with('Too many gemspecs')
+    it 'is the basename of the pwd' do
+      expect(name).to eq(expected_name)
+    end
+  end
 
-        expect {
-          gemspec_path
-        }.to raise_error(SystemExit)
+  context 'namespace_name' do
+    subject(:namespace_name) {
+      cli.send(:namespace_name)
+    }
+
+    #
+    # lets
+    #
+
+    let(:namespaces) {
+      %w{First Second Third}
+    }
+
+    #
+    # Callbacks
+    #
+
+    before(:each) do
+      expect(cli).to receive(:namespaces).and_return([namespaces])
+    end
+
+    it 'joins namespaces together with Module separator' do
+      expect(namespace_name).to eq('First::Second::Third')
+    end
+  end
+
+  context '#namespaces' do
+    subject(:namespaces) {
+      cli.send(:namespaces)
+    }
+
+    #
+    # Callbacks
+    #
+
+    before(:each) do
+      expect(cli).to receive(:name).and_return(name)
+    end
+
+    context 'with single word' do
+      let(:name) {
+        'yard'
+      }
+
+      it 'is array with capitalized word' do
+        expect(namespaces).to eq(%w{Yard})
       end
+    end
 
-      it 'exits with non-zero status' do
-        expect {
-          gemspec_path
-        }.to raise_error(SystemExit) { |error|
-          expect(error.status).not_to eq(0)
+    context 'with multiple words' do
+      context 'separated by dashes' do
+        let(:name) {
+          'metasploit-version'
         }
+
+        it 'is array with each word capitalized' do
+          expect(namespaces).to eq(%w{Metasploit Version})
+        end
       end
+
+      context 'separated by underscores' do
+        let(:name) {
+          'metasploit_data_models'
+        }
+
+        it 'is array with single word camelized' do
+          expect(namespaces).to eq(%w{MetasploitDataModels})
+        end
+      end
+
+      context 'separated by dashes and underscores' do
+        let(:name) {
+          'debugger-ruby_core_source'
+        }
+
+        it 'is array with underscored words camelized and a separate word for each pair of hyphenated separated words' do
+          expect(namespaces).to eq(%w{Debugger RubyCoreSource})
+        end
+      end
+    end
+  end
+
+  context '#namespaced_path' do
+    subject(:namespaced_path) {
+      cli.send(:namespaced_path)
+    }
+
+    #
+    # lets
+    #
+
+    let(:name) {
+      'debugger-ruby_core_source'
+    }
+
+    #
+    # Callbacks
+    #
+
+    before(:each) do
+      expect(cli).to receive(:name).and_return(name)
+    end
+
+    it "converts '-' to '/" do
+      expect(namespaced_path).not_to include('-')
+      expect(namespaced_path).to include('_')
+      expect(namespaced_path).to eq('debugger/ruby_core_source')
     end
   end
 end
