@@ -82,8 +82,8 @@ Feature: metasploit-version install adds 'version.rb' to replace default 'versio
 
     Examples:
       | gem_name  | version_rb_path          | namespace_name |
-      | singleton | lib/singleton/version.rb | Singleton     |
-      | two_words | lib/two_words/version.rb | TwoWords      |
+      | single    | lib/single/version.rb    | Single         |
+      | two_words | lib/two_words/version.rb | TwoWords       |
 
   Scenario Outline: Two-level namespace
     Given I successfully run `bundle gem <gem_name>`
