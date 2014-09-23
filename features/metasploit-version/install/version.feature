@@ -15,6 +15,10 @@ Feature: metasploit-version install adds 'version.rb' to replace default 'versio
     And I cd to "<gem_name>"
     And my git identity is configured
     And I successfully run `git commit --message "bundle gem <gem_name>"`
+    And I unset the environment variable "TRAVIS_BRANCH"
+    And I set the environment variables to:
+      | variable            | value |
+      | TRAVIS_PULL_REQUEST | false |
     When I successfully run `metasploit-version install --force`
     Then the file "<version_rb_path>" should contain exactly:
       """
@@ -86,6 +90,10 @@ Feature: metasploit-version install adds 'version.rb' to replace default 'versio
     And I cd to "<gem_name>"
     And my git identity is configured
     And I successfully run `git commit --message "bundle gem <gem_name>"`
+    And I unset the environment variable "TRAVIS_BRANCH"
+    And I set the environment variables to:
+      | variable            | value |
+      | TRAVIS_PULL_REQUEST | false |
     When I successfully run `metasploit-version install --force`
     Then the file "<version_rb_path>" should contain exactly:
       """
