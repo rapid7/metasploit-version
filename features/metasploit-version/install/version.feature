@@ -13,6 +13,8 @@ Feature: metasploit-version install adds 'version.rb' to replace default 'versio
   Scenario Outline: Top-level namespace
     Given I successfully run `bundle gem <gem_name>`
     And I cd to "<gem_name>"
+    And my git identity is configured
+    And I successfully run `git commit --message "bundle gem <gem_name>"`
     When I successfully run `metasploit-version install --force`
     Then the file "<version_rb_path>" should contain exactly:
       """
@@ -82,6 +84,8 @@ Feature: metasploit-version install adds 'version.rb' to replace default 'versio
   Scenario Outline: Two-level namespace
     Given I successfully run `bundle gem <gem_name>`
     And I cd to "<gem_name>"
+    And my git identity is configured
+    And I successfully run `git commit --message "bundle gem <gem_name>"`
     When I successfully run `metasploit-version install --force`
     Then the file "<version_rb_path>" should contain exactly:
       """
@@ -177,6 +181,7 @@ Feature: metasploit-version install adds 'version.rb' to replace default 'versio
     And I set the environment variables to:
       | variable            | value |
       | TRAVIS_PULL_REQUEST | false |
+    And my git identity is configured
     And I successfully run `git commit --message "bundle gem master"`
     When I successfully run `metasploit-version install --force`
     Then the file "lib/master/version.rb" should contain exactly:
@@ -246,6 +251,7 @@ Feature: metasploit-version install adds 'version.rb' to replace default 'versio
     And I set the environment variables to:
       | variable            | value |
       | TRAVIS_PULL_REQUEST | false |
+    And my git identity is configured
     And I successfully run `git commit --message "bundle gem branch"`
     And I successfully run `git checkout -b <branch>`
     When I successfully run `metasploit-version install --force`

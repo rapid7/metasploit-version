@@ -28,3 +28,11 @@ end
 Given /^a git checkout of "(.*?)"$/ do |treeish|
   run_simple("git checkout #{treeish}", fail_on_error)
 end
+
+Given(/^my git identity is configured$/) do
+  # git commit will fail if account ident is not setup
+  if ENV['TRAVIS'] == 'true'
+    run_simple('git config --local user.email "cucumber@example.com"')
+    run_simple('git config --local user.name "Cucumber"')
+  end
+end
