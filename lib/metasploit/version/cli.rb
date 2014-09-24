@@ -85,6 +85,7 @@ class Metasploit::Version::CLI < Thor
   def install
     ensure_development_dependency
     template('lib/versioned/version.rb.tt', "lib/#{namespaced_path}/version.rb")
+    system('bundle', 'install')
   end
 
   private
