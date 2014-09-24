@@ -1,6 +1,6 @@
 Feature: metasploit-version install's 'version.rb' generate proper namespace nesting
 
-  The version.rb file from metasploit-version will generate the approachly indented nesting for single and multiple
+  The version.rb file from metasploit-version will generate the appropriately indented nesting for single and multiple
   namespaces with proper conversion of underscored and dashes in the gem name to camel case and separate modules,
   respectively
 
