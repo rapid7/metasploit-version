@@ -32,7 +32,7 @@ Gem::Specification.new do |spec|
     spec.add_development_dependency 'redcarpet'
   end
 
-  spec.add_runtime_dependency 'rspec'
+  spec.add_runtime_dependency 'rspec', '~> 3.1'
   spec.add_runtime_dependency 'thor'
   spec.add_development_dependency 'metasploit-version', '~> 0.1.1'
 end

@@ -86,6 +86,7 @@ class Metasploit::Version::CLI < Thor
     ensure_development_dependency
     template('lib/versioned/version.rb.tt', "lib/#{namespaced_path}/version.rb")
     system('bundle', 'install')
+    setup_rspec
   end
 
   private
@@ -243,5 +244,11 @@ class Metasploit::Version::CLI < Thor
     end
 
     @prerelease
+  end
+
+  def setup_rspec
+    template('.rspec.tt', '.rspec')
+    template('Rakefile.tt', 'Rakefile')
+    template('spec/spec_helper.rb.tt', 'spec/spec_helper.rb')
   end
 end
