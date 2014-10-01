@@ -5,7 +5,10 @@ Feature: metasploit-version install's 'version.rb' generate proper namespace nes
   respectively
 
   Scenario Outline: Top-level namespace
-    Given I successfully run `bundle gem <gem_name>`
+    Given I build gem from project's "metasploit-version.gemspec"
+    And I'm using a clean gemset "<gem_name>"
+    And I install latest local "metasploit-version" gem
+    And I successfully run `bundle gem <gem_name>`
     And I cd to "<gem_name>"
     And my git identity is configured
     And I successfully run `git commit --message "bundle gem <gem_name>"`
@@ -80,7 +83,10 @@ Feature: metasploit-version install's 'version.rb' generate proper namespace nes
       | two_words | lib/two_words/version.rb | TwoWords       |
 
   Scenario Outline: Two-level namespace
-    Given I successfully run `bundle gem <gem_name>`
+    Given I build gem from project's "metasploit-version.gemspec"
+    And I'm using a clean gemset "<gem_name>"
+    And I install latest local "metasploit-version" gem
+    And I successfully run `bundle gem <gem_name>`
     And I cd to "<gem_name>"
     And my git identity is configured
     And I successfully run `git commit --message "bundle gem <gem_name>"`

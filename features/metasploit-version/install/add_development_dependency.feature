@@ -3,27 +3,24 @@ Feature: metasploit-version install adds 'metasploit-version' as a development d
   The `metasploit-version install` command will add 'metasploit-version' to the gem's gemspec if it is not already
   added.
 
-  Scenario: No gemspec
-    Given a file matching %r<.*\.gemspec> should not exist
-    When I run `metasploit-version install`
-    Then the output should contain "No gemspec found"
-    And the exit status should not be 0
+  Background:
+    Given I build gem from project's "metasploit-version.gemspec"
+    And I'm using a clean gemset "add_development_depedency"
+    And I install latest local "metasploit-version" gem
+    And I successfully run `bundle gem add_development_dependency`
+    And I cd to "add_development_dependency"
 
   Scenario: Not added to gemspec
-    Given I successfully run `bundle gem metasploit_version_install_development_dependency`
-    And I cd to "metasploit_version_install_development_dependency"
     When I successfully run `metasploit-version install --force`
-    Then metasploit-version should be development dependency with semantic version restriction in "metasploit_version_install_development_dependency.gemspec"
+    Then metasploit-version should be development dependency with semantic version restriction in "add_development_dependency.gemspec"
 
   Scenario: No semantic version restriction
-    Given I successfully run `bundle gem metasploit_version_install_development_dependency`
-    And I cd to "metasploit_version_install_development_dependency"
-    And I overwrite "metasploit_version_install_development_dependency.gemspec" with:
+    And I overwrite "add_development_dependency.gemspec" with:
       """
       # coding: utf-8
 
       Gem::Specification.new do |spec|
-        spec.name          = "metasploit_version_install_development_dependency"
+        spec.name          = "add_development_dependency"
         spec.version       = '0.0.0'
         spec.authors       = ["Luke Imhoff"]
         spec.email         = ["luke_imhoff@rapid7.com"]
@@ -43,17 +40,15 @@ Feature: metasploit-version install adds 'metasploit-version' as a development d
       end
       """
     When I successfully run `metasploit-version install --force`
-    Then metasploit-version should be development dependency with semantic version restriction in "metasploit_version_install_development_dependency.gemspec"
+    Then metasploit-version should be development dependency with semantic version restriction in "add_development_dependency.gemspec"
 
   Scenario: Semantic version restriction in gemspec
-    Given I successfully run `bundle gem metasploit_version_install_development_dependency`
-    And I cd to "metasploit_version_install_development_dependency"
-    And I overwrite "metasploit_version_install_development_dependency.gemspec" with:
+    And I overwrite "add_development_dependency.gemspec" with:
       """
       # coding: utf-8
 
       Gem::Specification.new do |spec|
-        spec.name          = "metasploit_version_install_development_dependency"
+        spec.name          = "add_development_dependency"
         spec.version       = '0.0.0'
         spec.authors       = ["Luke Imhoff"]
         spec.email         = ["luke_imhoff@rapid7.com"]
@@ -73,4 +68,4 @@ Feature: metasploit-version install adds 'metasploit-version' as a development d
       end
       """
     When I successfully run `metasploit-version install --force`
-    Then metasploit-version should be development dependency with semantic version restriction in "metasploit_version_install_development_dependency.gemspec"
+    Then metasploit-version should be development dependency with semantic version restriction in "add_development_dependency.gemspec"

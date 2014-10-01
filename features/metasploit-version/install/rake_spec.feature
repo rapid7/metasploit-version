@@ -4,7 +4,10 @@ Feature: metasploit-version install will setup rspec and rake spec
   `metasploit-version install` completes
 
   Background:
-    Given I successfully run `bundle gem specced`
+    Given I build gem from project's "metasploit-version.gemspec"
+    And I'm using a clean gemset "specced"
+    And I install latest local "metasploit-version" gem
+    And I successfully run `bundle gem specced`
     And I cd to "specced"
     And my git identity is configured
     And I successfully run `git commit --message "bundle gem specced"`

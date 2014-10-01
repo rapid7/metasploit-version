@@ -5,7 +5,12 @@ Feature: metasploit-version install will install dependencies with bundle instal
   such as `rspec` are installed so that user can immediately run `rake spec`
 
   Scenario:
-    Given I successfully run `bundle gem installed`
+    Given I build gem from project's "metasploit-version.gemspec"
+    And I'm using a clean gemset "installed"
+    When I run `bundle list`
+    Then the output from "bundle list" should not contain "metasploit-version"
+    Given I install latest local "metasploit-version" gem
+    And I successfully run `bundle gem installed`
     And I cd to "installed"
     And my git identity is configured
     And I successfully run `git commit --message "bundle gem installed"`

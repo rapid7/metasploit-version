@@ -4,7 +4,10 @@ Feature: metasploit-version install conditionally defines PRERELEASE in version.
   a branch, while it will not define PRERELEASE on master.
 
   Scenario: No PRERELEASE on master
-    Given I successfully run `bundle gem master`
+    Given I build gem from project's "metasploit-version.gemspec"
+    And I'm using a clean gemset "master"
+    And I install latest local "metasploit-version" gem
+    And I successfully run `bundle gem master`
     And I cd to "master"
     And I unset the environment variable "TRAVIS_BRANCH"
     And I set the environment variables to:
@@ -74,7 +77,10 @@ Feature: metasploit-version install conditionally defines PRERELEASE in version.
       """
 
   Scenario Outline: PRERELEASE on branch
-    Given I successfully run `bundle gem branch`
+    Given I build gem from project's "metasploit-version.gemspec"
+    And I'm using a clean gemset "branch"
+    And I install latest local "metasploit-version" gem
+    And I successfully run `bundle gem branch`
     And I cd to "branch"
     And I unset the environment variable "TRAVIS_BRANCH"
     And I set the environment variables to:
