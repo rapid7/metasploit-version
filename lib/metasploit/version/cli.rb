@@ -76,7 +76,7 @@ class Metasploit::Version::CLI < Thor
          type: :numeric
   option :patch,
          banner: 'PATCH',
-         default: 0,
+         default: 1,
          desc: 'Patch version number, scoped to MAJOR and MINOR version numbers.',
          type: :numeric
   # Adds 'metasploit-version' as a development dependency in this project's gemspec.
@@ -249,6 +249,7 @@ class Metasploit::Version::CLI < Thor
   def setup_rspec
     template('.rspec.tt', '.rspec')
     template('Rakefile.tt', 'Rakefile')
+    template('spec/lib/versioned/version_spec.rb.tt', "spec/lib/#{namespaced_path}/version_spec.rb")
     template('spec/spec_helper.rb.tt', 'spec/spec_helper.rb')
   end
 end
