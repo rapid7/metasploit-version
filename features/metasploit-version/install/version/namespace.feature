@@ -31,7 +31,7 @@ Feature: metasploit-version install's 'version.rb' generate proper namespace nes
           # The minor version number, scoped to the {MAJOR} version number.
           MINOR = 0
           # The patch version number, scoped to the {MAJOR} and {MINOR} version numbers.
-          PATCH = 0
+          PATCH = 1
 
           #
           # Module Methods
@@ -110,7 +110,7 @@ Feature: metasploit-version install's 'version.rb' generate proper namespace nes
             # The minor version number, scoped to the {MAJOR} version number.
             MINOR = 0
             # The patch version number, scoped to the {MAJOR} and {MINOR} version numbers.
-            PATCH = 0
+            PATCH = 1
 
             #
             # Module Methods

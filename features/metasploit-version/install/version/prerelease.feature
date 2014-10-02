@@ -30,7 +30,7 @@ Feature: metasploit-version install conditionally defines PRERELEASE in version.
           # The minor version number, scoped to the {MAJOR} version number.
           MINOR = 0
           # The patch version number, scoped to the {MAJOR} and {MINOR} version numbers.
-          PATCH = 0
+          PATCH = 1
 
           #
           # Module Methods
@@ -104,7 +104,7 @@ Feature: metasploit-version install conditionally defines PRERELEASE in version.
           # The minor version number, scoped to the {MAJOR} version number.
           MINOR = 0
           # The patch version number, scoped to the {MAJOR} and {MINOR} version numbers.
-          PATCH = 0
+          PATCH = 1
           # The prerelease version, scoped to the {MAJOR}, {MINOR}, and {PATCH} version numbers.
           PRERELEASE = '<prerelease>'
 
