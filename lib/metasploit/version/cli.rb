@@ -246,6 +246,9 @@ class Metasploit::Version::CLI < Thor
     @prerelease
   end
 
+  # Generates `.rspec`, `Rakefile`, `version_spec.rb`, `<namespace>_spec.rb` and `spec/spec_helper.rb`
+  #
+  # @return [void]
   def setup_rspec
     template('.rspec.tt', '.rspec')
     template('Rakefile.tt', 'Rakefile')
