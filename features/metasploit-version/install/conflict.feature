@@ -1,8 +1,8 @@
-Feature: metasploit-version install handles conflicts in 'version.rb'
+Feature: metasploit-version install handles conflicts in 'version.rb' and 'Rakefile'
 
-  `metasploit-version install` will detect if the a version.rb file already exists and prompt the user for conflict
-  resolution.  The user can also non-interactive force the file to be overwritten with --force or skip overwriting the
-  file with --skip.
+  `metasploit-version install` will detect if the a version.rb file and/or Rakefile already exists and prompt the user
+  for conflict resolution.  The user can also non-interactive force the files to be overwritten with --force or skip
+  overwriting the files with --skip.
 
   Background:
     Given I build gem from project's "metasploit-version.gemspec"
@@ -18,12 +18,16 @@ Feature: metasploit-version install handles conflicts in 'version.rb'
     # to overwrite Rakefile
     And I type "y"
     Then the output should contain "conflict  lib/metasploit_version_install_conflict/version.rb"
+    And the output should contain "conflict  Rakefile"
     And the output should contain "force  lib/metasploit_version_install_conflict/version.rb"
+    And the output should contain "force  Rakefile"
 
   Scenario: --force will force update version.rb
     When I successfully run `metasploit-version install --force`
     Then the output should contain "force  lib/metasploit_version_install_conflict/version.rb"
+    Then the output should contain "force  Rakefile"
 
   Scenario: --skip will not update version.rb
     When I successfully run `metasploit-version install --skip`
     Then the output should contain "skip  lib/metasploit_version_install_conflict/version.rb"
+    Then the output should contain "skip  Rakefile"
