@@ -42,16 +42,33 @@ describe Metasploit::Version::CLI do
         cli.install
       }
 
+      before(:each) do
+        allow(cli).to receive(:ensure_development_dependency)
+        allow(cli).to receive(:template)
+        allow(cli).to receive(:system)
+        allow(cli).to receive(:setup_rspec)
+      end
+
       it 'calls #ensure_development_dependency' do
         expect(cli).to receive(:ensure_development_dependency)
-        allow(cli).to receive(:template)
 
         install
       end
 
       it 'generates version.rb template' do
-        allow(cli).to receive(:ensure_development_dependency)
         expect(cli).to receive(:template).with('lib/versioned/version.rb.tt', 'lib/metasploit/version/version.rb')
+
+        install
+      end
+
+      it 'installs bundle' do
+        expect(cli).to receive(:system).with('bundle', 'install')
+
+        install
+      end
+
+      it 'setups up rspec' do
+        expect(cli).to receive(:setup_rspec)
 
         install
       end
