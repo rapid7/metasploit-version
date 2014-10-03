@@ -5,10 +5,7 @@ Feature: metasploit-version install's <namespace>_spec.rb generates proper names
   modules, respectively.
 
   Scenario Outline:
-    Given I build gem from project's "metasploit-version.gemspec"
-    And I'm using a clean gemset "<gem_name>"
-    And I install latest local "metasploit-version" gem
-    And I successfully run `bundle gem <gem_name>`
+    Given I successfully run `bundle gem <gem_name>`
     And I cd to "<gem_name>"
     And my git identity is configured
     And I successfully run `git commit --message "bundle gem <gem_name>"`
@@ -16,7 +13,7 @@ Feature: metasploit-version install's <namespace>_spec.rb generates proper names
     And I set the environment variables to:
       | variable            | value |
       | TRAVIS_PULL_REQUEST | false |
-    When I successfully run `metasploit-version install --force`
+    When I successfully run `metasploit-version install --force --no-bundle-install`
     Then the file "<namespace_spec_rb_path>" should contain exactly:
       """
       RSpec.describe <gem_namespace_module> do

@@ -4,10 +4,7 @@ Feature: metasploit-version install's 'version_spec.rb' catches errors in versio
   constant in version.rb to when going from a branch to master.
 
   Background:
-    Given I build gem from project's "metasploit-version.gemspec"
-    And I'm using a clean gemset "branched"
-    And I install latest local "metasploit-version" gem
-    And I successfully run `bundle gem branched`
+    Given I successfully run `bundle gem branched`
     And I cd to "branched"
     And my git identity is configured
     And I successfully run `git commit --message "bundle gem branched"`
@@ -16,7 +13,7 @@ Feature: metasploit-version install's 'version_spec.rb' catches errors in versio
     And I set the environment variables to:
       | variable            | value |
       | TRAVIS_PULL_REQUEST | false |
-    And I successfully run `metasploit-version install --force`
+    And I successfully run `metasploit-version install --force --no-bundle-install`
     And I successfully run `rake spec`
     And I successfully run `git add *`
     And I successfully run `git commit --all --message "metasploit-version install"`

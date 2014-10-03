@@ -4,10 +4,7 @@ Feature: metasploit-version install's 'version_spec.rb' catches when PRERELEASE 
   version.rb when branching from master.
 
   Background:
-    Given I build gem from project's "metasploit-version.gemspec"
-    And I'm using a clean gemset "versioned"
-    And I install latest local "metasploit-version" gem
-    And I successfully run `bundle gem versioned`
+    Given I successfully run `bundle gem versioned`
     And I cd to "versioned"
     And my git identity is configured
     And I successfully run `git commit --message "bundle gem versioned"`
@@ -18,11 +15,11 @@ Feature: metasploit-version install's 'version_spec.rb' catches when PRERELEASE 
 
   Scenario: Installing metasploit-version on feature branch
     Given I successfully run `git checkout -b feature/MSP-1234/metasploit-version`
-    And I successfully run `metasploit-version install --force`
+    And I successfully run `metasploit-version install --force --no-bundle-install`
     Then I successfully run `rake spec`
 
   Scenario: Branching from master without adding PRERELEASE
-    And I successfully run `metasploit-version install --force`
+    And I successfully run `metasploit-version install --force --no-bundle-install`
     And I successfully run `rake spec`
     And I successfully run `git add *`
     And I successfully run `git commit --all --message "metasploit-version install"`

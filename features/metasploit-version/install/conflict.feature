@@ -5,10 +5,7 @@ Feature: metasploit-version install handles conflicts in 'version.rb' and 'Rakef
   overwriting the files with --skip.
 
   Background:
-    Given I build gem from project's "metasploit-version.gemspec"
-    And I'm using a clean gemset "metasploit_version_install_conflict"
-    And I install latest local "metasploit-version" gem
-    And I successfully run `bundle gem metasploit_version_install_conflict`
+    Given I successfully run `bundle gem metasploit_version_install_conflict`
     And I cd to "metasploit_version_install_conflict"
     And I write to "spec/lib/metasploit_version_install_conflict_spec.rb" with:
       """
@@ -21,7 +18,7 @@ Feature: metasploit-version install handles conflicts in 'version.rb' and 'Rakef
       """
 
   Scenario: Prompts for confirmation if --force or --skip is not used
-    When I run `metasploit-version install` interactively
+    When I run `metasploit-version install --no-bundle-install` interactively
     # to overwrite version.rb
     And I type "y"
     # to overwrite Rakefile
@@ -36,13 +33,13 @@ Feature: metasploit-version install handles conflicts in 'version.rb' and 'Rakef
     And the output should contain "force  spec/lib/metasploit_version_install_conflict_spec.rb"
 
   Scenario: --force will force update version.rb
-    When I successfully run `metasploit-version install --force`
+    When I successfully run `metasploit-version install --force --no-bundle-install`
     Then the output should contain "force  Rakefile"
     And the output should contain "force  lib/metasploit_version_install_conflict/version.rb"
     And the output should contain "force  spec/lib/metasploit_version_install_conflict_spec.rb"
 
   Scenario: --skip will not update version.rb
-    When I successfully run `metasploit-version install --skip`
+    When I successfully run `metasploit-version install --no-bundle-install --skip`
     Then the output should contain "skip  Rakefile"
     And the output should contain "skip  lib/metasploit_version_install_conflict/version.rb"
     And the output should contain "skip  spec/lib/metasploit_version_install_conflict_spec.rb"

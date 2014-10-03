@@ -4,10 +4,7 @@ Feature: metasploit-version install's version_spec.rb catches errors with PREREL
   constant in version.rb to when going from one branch to another.
 
   Background:
-    Given I build gem from project's "metasploit-version.gemspec"
-    And I'm using a clean gemset "double_branched"
-    And I install latest local "metasploit-version" gem
-    And I successfully run `bundle gem double_branched`
+    Given I successfully run `bundle gem double_branched`
     And I cd to "double_branched"
     And my git identity is configured
     And I successfully run `git commit --message "bundle gem double_branched"`
@@ -15,7 +12,7 @@ Feature: metasploit-version install's version_spec.rb catches errors with PREREL
     And I set the environment variables to:
       | variable            | value |
       | TRAVIS_PULL_REQUEST | false |
-    And I successfully run `metasploit-version install --force`
+    And I successfully run `metasploit-version install --force --no-bundle-install`
     And I successfully run `rake spec`
     And I successfully run `git add *`
     And I successfully run `git commit --all --message "metasploit-version install"`

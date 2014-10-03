@@ -4,10 +4,7 @@ Feature: metasploit-version install conditionally defines PRERELEASE in version.
   a branch, while it will not define PRERELEASE on master.
 
   Scenario: No PRERELEASE on master
-    Given I build gem from project's "metasploit-version.gemspec"
-    And I'm using a clean gemset "master"
-    And I install latest local "metasploit-version" gem
-    And I successfully run `bundle gem master`
+    Given I successfully run `bundle gem master`
     And I cd to "master"
     And I unset the environment variable "TRAVIS_BRANCH"
     And I set the environment variables to:
@@ -15,7 +12,7 @@ Feature: metasploit-version install conditionally defines PRERELEASE in version.
       | TRAVIS_PULL_REQUEST | false |
     And my git identity is configured
     And I successfully run `git commit --message "bundle gem master"`
-    When I successfully run `metasploit-version install --force`
+    When I successfully run `metasploit-version install --force --no-bundle-install`
     Then the file "lib/master/version.rb" should contain exactly:
       """
       module Master
@@ -77,10 +74,7 @@ Feature: metasploit-version install conditionally defines PRERELEASE in version.
       """
 
   Scenario Outline: PRERELEASE on branch
-    Given I build gem from project's "metasploit-version.gemspec"
-    And I'm using a clean gemset "branch"
-    And I install latest local "metasploit-version" gem
-    And I successfully run `bundle gem branch`
+    Given I successfully run `bundle gem branch`
     And I cd to "branch"
     And I unset the environment variable "TRAVIS_BRANCH"
     And I set the environment variables to:
@@ -89,7 +83,7 @@ Feature: metasploit-version install conditionally defines PRERELEASE in version.
     And my git identity is configured
     And I successfully run `git commit --message "bundle gem branch"`
     And I successfully run `git checkout -b <branch>`
-    When I successfully run `metasploit-version install --force`
+    When I successfully run `metasploit-version install --force --no-bundle-install`
     Then the file "lib/branch/version.rb" should contain exactly:
       """
       module Branch

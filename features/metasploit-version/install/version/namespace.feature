@@ -5,10 +5,7 @@ Feature: metasploit-version install's 'version.rb' generate proper namespace nes
   respectively
 
   Scenario Outline: Top-level namespace
-    Given I build gem from project's "metasploit-version.gemspec"
-    And I'm using a clean gemset "<gem_name>"
-    And I install latest local "metasploit-version" gem
-    And I successfully run `bundle gem <gem_name>`
+    Given I successfully run `bundle gem <gem_name>`
     And I cd to "<gem_name>"
     And my git identity is configured
     And I successfully run `git commit --message "bundle gem <gem_name>"`
@@ -16,7 +13,7 @@ Feature: metasploit-version install's 'version.rb' generate proper namespace nes
     And I set the environment variables to:
       | variable            | value |
       | TRAVIS_PULL_REQUEST | false |
-    When I successfully run `metasploit-version install --force`
+    When I successfully run `metasploit-version install --force --no-bundle-install`
     Then the file "<version_rb_path>" should contain exactly:
       """
       module <namespace_name>
@@ -83,10 +80,7 @@ Feature: metasploit-version install's 'version.rb' generate proper namespace nes
       | two_words | lib/two_words/version.rb | TwoWords       |
 
   Scenario Outline: Two-level namespace
-    Given I build gem from project's "metasploit-version.gemspec"
-    And I'm using a clean gemset "<gem_name>"
-    And I install latest local "metasploit-version" gem
-    And I successfully run `bundle gem <gem_name>`
+    Given I successfully run `bundle gem <gem_name>`
     And I cd to "<gem_name>"
     And my git identity is configured
     And I successfully run `git commit --message "bundle gem <gem_name>"`
@@ -94,7 +88,7 @@ Feature: metasploit-version install's 'version.rb' generate proper namespace nes
     And I set the environment variables to:
       | variable            | value |
       | TRAVIS_PULL_REQUEST | false |
-    When I successfully run `metasploit-version install --force`
+    When I successfully run `metasploit-version install --force --no-bundle-install`
     Then the file "<version_rb_path>" should contain exactly:
       """
       module <parent_module_name>

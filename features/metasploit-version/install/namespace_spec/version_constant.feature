@@ -4,10 +4,7 @@ Feature: metasploit-version install's <namespace>_spec.rb uses 'Metasploit::Vers
   shared example.
 
   Background:
-    Given I build gem from project's "metasploit-version.gemspec"
-    And I'm using a clean gemset "namespace_spec"
-    And I install latest local "metasploit-version" gem
-    And I successfully run `bundle gem namespace_spec`
+    Given I successfully run `bundle gem namespace_spec`
     And I cd to "namespace_spec"
     And my git identity is configured
     And I successfully run `git commit --message "bundle gem namespace_spec"`
@@ -15,7 +12,7 @@ Feature: metasploit-version install's <namespace>_spec.rb uses 'Metasploit::Vers
     And I set the environment variables to:
       | variable            | value |
       | TRAVIS_PULL_REQUEST | false |
-    And I successfully run `metasploit-version install --force`
+    And I successfully run `metasploit-version install --force --no-bundle-install`
     And I successfully run `git add *`
     And I successfully run `git commit --all --message "metasploit-version install"`
     And I successfully run `git checkout -b feature/MSP-1337/super-cool`

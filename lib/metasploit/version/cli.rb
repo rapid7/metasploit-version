@@ -79,13 +79,20 @@ class Metasploit::Version::CLI < Thor
          default: 1,
          desc: 'Patch version number, scoped to MAJOR and MINOR version numbers.',
          type: :numeric
+  option :bundle_install,
+         default: true,
+         desc: '`bundle install` after adding `metasploit-version` as a development dependency so you can ' \
+               'immediately run `rake spec` afterwards.  Use `--no-bundle-install` if you want to add other gems to ' \
+               'the gemspec or Gemfile before installing or you\'re just rerunning install to update the templated ' \
+               'files and the dependencies are already in your bundle.',
+         type: :boolean
   # Adds 'metasploit-version' as a development dependency in this project's gemspec.
   #
   # @return [void]
   def install
     ensure_development_dependency
     template('lib/versioned/version.rb.tt', "lib/#{namespaced_path}/version.rb")
-    system('bundle', 'install')
+    install_bundle
     setup_rspec
   end
 
@@ -182,6 +189,15 @@ class Metasploit::Version::CLI < Thor
     end
 
     @gemspec_path
+  end
+
+  # `bundle install` if the :bundle_install options is `true`
+  #
+  # @return [void]
+  def install_bundle
+    if options[:bundle_install]
+      system('bundle', 'install')
+    end
   end
 
   # The name of the gem.

@@ -4,18 +4,15 @@ Feature: metasploit-version install adds 'metasploit-version' as a development d
   added.
 
   Background:
-    Given I build gem from project's "metasploit-version.gemspec"
-    And I'm using a clean gemset "add_development_depedency"
-    And I install latest local "metasploit-version" gem
-    And I successfully run `bundle gem add_development_dependency`
+    Given I successfully run `bundle gem add_development_dependency`
     And I cd to "add_development_dependency"
 
   Scenario: Not added to gemspec
-    When I successfully run `metasploit-version install --force`
+    When I successfully run `metasploit-version install --force --no-bundle-install`
     Then metasploit-version should be development dependency with semantic version restriction in "add_development_dependency.gemspec"
 
   Scenario: No semantic version restriction
-    And I overwrite "add_development_dependency.gemspec" with:
+    Given I overwrite "add_development_dependency.gemspec" with:
       """
       # coding: utf-8
 
@@ -39,11 +36,11 @@ Feature: metasploit-version install adds 'metasploit-version' as a development d
         spec.add_development_dependency "rake"
       end
       """
-    When I successfully run `metasploit-version install --force`
+    When I successfully run `metasploit-version install --force --no-bundle-install`
     Then metasploit-version should be development dependency with semantic version restriction in "add_development_dependency.gemspec"
 
   Scenario: Semantic version restriction in gemspec
-    And I overwrite "add_development_dependency.gemspec" with:
+    Given I overwrite "add_development_dependency.gemspec" with:
       """
       # coding: utf-8
 
@@ -67,5 +64,5 @@ Feature: metasploit-version install adds 'metasploit-version' as a development d
         spec.add_development_dependency "rake"
       end
       """
-    When I successfully run `metasploit-version install --force`
+    When I successfully run `metasploit-version install --force --no-bundle-install`
     Then metasploit-version should be development dependency with semantic version restriction in "add_development_dependency.gemspec"
