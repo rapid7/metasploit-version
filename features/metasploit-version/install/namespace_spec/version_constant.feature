@@ -106,11 +106,9 @@ Feature: metasploit-version install's <namespace>_spec.rb uses 'Metasploit::Vers
       """
              expected NamespaceSpec::VERSION to be defined
       """
-    And the output should contain:
-      """
-           NameError:
-             uninitialized constant NamespaceSpec::VERSION
-      """
+    # On MRI and JRuby, the error is "uninitialized constant NamespaceSpace::VERSION", but on Rubinius the error is
+    # "Missing or uninitialized constant: NamespaceSpec::VERSION", so have to use match
+    And the output should match /uninitialized constant.*NamespaceSpec::VERSION/
     And the output should contain " 2 failures"
 
   Scenario: VERSION is not equal to Version.full
