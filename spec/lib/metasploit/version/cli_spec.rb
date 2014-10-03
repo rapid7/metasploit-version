@@ -45,7 +45,7 @@ describe Metasploit::Version::CLI do
       before(:each) do
         allow(cli).to receive(:ensure_development_dependency)
         allow(cli).to receive(:template)
-        allow(cli).to receive(:system)
+        allow(cli).to receive(:install_bundle)
         allow(cli).to receive(:setup_rspec)
       end
 
@@ -62,7 +62,7 @@ describe Metasploit::Version::CLI do
       end
 
       it 'installs bundle' do
-        expect(cli).to receive(:system).with('bundle', 'install')
+        expect(cli).to receive(:install_bundle)
 
         install
       end
