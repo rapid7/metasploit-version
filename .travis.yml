@@ -8,6 +8,8 @@ language: ruby
 matrix:
   allow_failures:
     - rvm: ruby-head
+    # cucumber keeps hitting job time limit of 50 minutes
+    - rvm: rbx-2.2
   fast_finish: true
   # documentation coverage is not influenced by ruby version, but the dependencies differ for MRI and JRuby, so
   # rake yard for both.
