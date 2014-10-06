@@ -69,6 +69,21 @@ If the [CHANGELOG.md](CHANGELOG.md) contains any Enhancements or Deprecations, t
 If the [CHANGELOG.md](CHANGELOG.md) contains any Incompatible Change, then increment [`MAJOR`](<%= version_path %>) and
 reset [`MINOR`](<%= version_path %> and [`PATCH`](<%= version_path %>) to `0`.
 <%- end -%>
+
+## Setup [CHANGELOG.md](CHANGELOG.md) for next release
+
+- [ ] Change `Next Release` section name at the top of [CHANGELOG.md](CHANGELOG.md) to match the current `VERSION`.
+- [ ] Add a new `Next Release` section above the `VERSION`'s section you just renamed:
+<pre>
+# Next Release
+
+* Enhancements
+* Bug Fixes
+* Deprecations
+* Incompatible Changes
+</pre>
+
+## Release to rubygems.org
 <%- options[:ruby_versions].each do |ruby_version| -%>
 
 ## <%= ruby_version %>

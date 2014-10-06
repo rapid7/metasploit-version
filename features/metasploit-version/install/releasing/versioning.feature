@@ -103,6 +103,21 @@ Feature: metasploit-version install should add RELEASING.md that handles pre-1.0
     And the file "RELEASING.md" should contain:
       """
 
+      ## Setup [CHANGELOG.md](CHANGELOG.md) for next release
+
+      - [ ] Change `Next Release` section name at the top of [CHANGELOG.md](CHANGELOG.md) to match the current `VERSION`.
+      - [ ] Add a new `Next Release` section above the `VERSION`'s section you just renamed:
+      <pre>
+      # Next Release
+
+      * Enhancements
+      * Bug Fixes
+      * Deprecations
+      * Incompatible Changes
+      </pre>
+
+      ## Release to rubygems.org
+
       ## jruby
       - [ ] `rvm use jruby@released`
       - [ ] `rm Gemfile.lock`
@@ -118,5 +133,6 @@ Feature: metasploit-version install should add RELEASING.md that handles pre-1.0
 
       ### Downstream dependencies
 
-      There are currently no known downstream dependencies
+      There are currently no known downstream dependenci
       """
+
