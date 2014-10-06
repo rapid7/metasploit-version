@@ -285,7 +285,7 @@ class Metasploit::Version::CLI < Thor
   def setup_rspec
     template('.rspec.tt', '.rspec')
     template('Rakefile.tt', 'Rakefile')
-    template('spec/lib/versioned/version_spec.rb.tt', "spec/#{version_path}_spec.rb")
+    template('spec/lib/versioned/version_spec.rb.tt', "spec/#{version_path.sub(/\.rb$/, '_spec.rb')}")
     template('spec/lib/versioned_spec.rb.tt', "spec/lib/#{namespaced_path}_spec.rb")
     template('spec/spec_helper.rb.tt', 'spec/spec_helper.rb')
   end
