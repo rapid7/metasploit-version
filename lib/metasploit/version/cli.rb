@@ -104,6 +104,7 @@ class Metasploit::Version::CLI < Thor
     template('CHANGELOG.md.tt', 'CHANGELOG.md')
     template('CONTRIBUTING.md.tt', 'CONTRIBUTING.md')
     template('RELEASING.md.tt', 'RELEASING.md')
+    template('UPGRADING.md.tt', 'UPGRADING.md')
     setup_rspec
   end
 

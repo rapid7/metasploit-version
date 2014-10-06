@@ -85,6 +85,12 @@ describe Metasploit::Version::CLI do
         install
       end
 
+      it 'generates UPGRADING.md from a template' do
+        expect(cli).to receive(:template).with('UPGRADING.md.tt', 'UPGRADING.md')
+
+        install
+      end
+
       it 'setups up rspec' do
         expect(cli).to receive(:setup_rspec)
 
