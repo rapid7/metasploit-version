@@ -134,5 +134,6 @@ Feature: metasploit-version install should add CONTRIBUTING.md
       - [ ] `git push origin DESTINATION`
       ```
 
-      To release the merged code see [RELEASING.md](RELEASING.md)
+      To update the [CHANGELOG.md](CHANGELOG.md) with the merged changes or release the merged code see
+      [RELEASING.md](RELEASING.md)
       """
