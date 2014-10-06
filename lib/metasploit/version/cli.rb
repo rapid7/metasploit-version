@@ -86,6 +86,14 @@ class Metasploit::Version::CLI < Thor
                'the gemspec or Gemfile before installing or you\'re just rerunning install to update the templated ' \
                'files and the dependencies are already in your bundle.',
          type: :boolean
+  option :github_owner,
+         default: 'rapid7',
+         desc: 'The owner of the github repo for this gem.  Used to generate links in CONTRIBUTING.md',
+         type: :string
+  option :ruby_versions,
+         default: ['jruby', 'ruby-2.1'],
+         desc: 'Ruby versions that the gem should be released for on rubygems.org as part of CONTRIBUTING.md',
+         type: :array
   # Adds 'metasploit-version' as a development dependency in this project's gemspec.
   #
   # @return [void]
@@ -93,6 +101,7 @@ class Metasploit::Version::CLI < Thor
     ensure_development_dependency
     template('lib/versioned/version.rb.tt', "lib/#{namespaced_path}/version.rb")
     install_bundle
+    template('CONTRIBUTING.md.tt', 'CONTRIBUTING.md')
     setup_rspec
   end
 
@@ -191,6 +200,13 @@ class Metasploit::Version::CLI < Thor
     @gemspec_path
   end
 
+  # The URL of the github repository.  Used to calculate the fork and issues URL in `CONTRIBUTING.md`.
+  #
+  # @return [String] https url to github repository
+  def github_url
+    @github_url ||= "https://github.com/#{options[:github_owner]}/#{name}"
+  end
+
   # `bundle install` if the :bundle_install options is `true`
   #
   # @return [void]
@@ -268,8 +284,15 @@ class Metasploit::Version::CLI < Thor
   def setup_rspec
     template('.rspec.tt', '.rspec')
     template('Rakefile.tt', 'Rakefile')
-    template('spec/lib/versioned/version_spec.rb.tt', "spec/lib/#{namespaced_path}/version_spec.rb")
+    template('spec/lib/versioned/version_spec.rb.tt', "spec/#{version_path}_spec.rb")
     template('spec/lib/versioned_spec.rb.tt', "spec/lib/#{namespaced_path}_spec.rb")
     template('spec/spec_helper.rb.tt', 'spec/spec_helper.rb')
+  end
+
+  # Path to the `version.rb` for the gem.
+  #
+  # @return [String]
+  def version_path
+    @version_path ||= "lib/#{namespaced_path}/version.rb"
   end
 end

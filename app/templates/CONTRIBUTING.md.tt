@@ -1,0 +1,174 @@
+# Contributing
+
+## Forking
+
+[Fork this repository](<%= github_url %>/fork)
+
+## Branching
+
+Branch names follow the format `TYPE/ISSUE/SUMMARY`.  You can create it with `git checkout -b TYPE/ISSUE/SUMMARY`.
+
+### `TYPE`
+
+`TYPE` can be `bug`, `chore`, or `feature`.
+
+### `ISSUE`
+
+`ISSUE` is either a [Github issue](<%= github_url %>/issues) or an issue from some other
+issue tracking software.
+
+### `SUMMARY`
+
+`SUMMARY` is is short summary of the purpose of the branch composed of lower case words separated by '-' so that it is a valid `PRERELEASE` for the Gem version.
+
+## Changes
+
+### `PRERELEASE`
+
+1. Update `PRERELEASE` to match the `SUMMARY` in the branch name.  If you branched from `master`, and [version.rb](<%= version_path %>) does not have `PRERELEASE` defined, then adding the following lines after `PATCH`:
+```
+# The prerelease version, scoped to the {MAJOR}, {MINOR}, and {PATCH} version number.
+PRERELEASE = '<SUMMARY>'
+```
+2. `rake spec`
+3.  Verify the specs pass, which indicates that `PRERELEASE` was updated correctly.
+4. Commit the change `git commit -a`
+
+### Your changes
+
+Make your changes or however many commits you like, committing each with `git commit`.
+
+### Pre-Pull Request Testing
+
+1. Run specs one last time before opening the Pull Request: `rake spec`
+2. Verify there was no failures.
+
+### Push
+
+Push your branch to your fork on gitub: `git push TYPE/ISSUE/SUMMARY`
+
+### Pull Request
+
+* [Create new Pull Request](<%= github_url %>/compare/)
+* Add a Verification Steps to the description comment
+
+```
+# Verification Steps
+
+- [ ] `bundle install`
+
+## `rake spec`
+- [ ] `rake spec`
+- [ ] VERIFY no failures
+```
+
+You should also include at least one scenario to manually check the changes outside of specs.
+
+* Add a Post-merge Steps comment
+
+The 'Post-merge Steps' are a reminder to the reviewer of the Pull Request of how to update the [`PRERELEASE`](<%= version_path %>) so that [version_spec.rb](spec/<%= version_path %>_spec.rb) passes on the target branch after the merge.
+
+DESTINATION is the name of the destination branch into which the merge is being made.  SOURCE_SUMMARY is the SUMMARY from TYPE/ISSUE/SUMMARY branch name for the SOURCE branch that is being made.
+
+When merging to `master`:
+
+```
+# Post-merge Steps
+
+Perform these steps prior to pushing to master or the build will be broke on master.
+
+## Version
+- [ ] Edit `<%= version_path %>`
+- [ ] Remove `PRERELEASE` and its comment as `PRERELEASE` is not defined on master.
+
+## Gem build
+- [ ] gem build *.gemspec
+- [ ] VERIFY the gem has no '.pre' version suffix.
+
+## RSpec
+- [ ] `rake spec`
+- [ ] VERIFY version examples pass without failures
+
+## Commit & Push
+- [ ] `git commit -a`
+- [ ] `git push origin master`
+```
+
+When merging to DESTINATION other than `master`:
+
+```
+# Post-merge Steps
+
+Perform these steps prior to pushing to DESTINATION or the build will be broke on DESTINATION.
+
+## Version
+- [ ] Edit `<%= version_path %>`
+- [ ] Change `PRERELEASE` from `SOURCE_SUMMARY` to `DESTINATION_SUMMARY` to match the branch (DESTINATION) summary (DESTINATION_SUMMARY)
+
+## Gem build
+- [ ] gem build <%= name %>.gemspec
+- [ ] VERIFY the prerelease suffix has change on the gem.
+
+## RSpec
+- [ ] `rake spec`
+- [ ] VERIFY version examples pass without failures
+
+## Commit & Push
+- [ ] `git commit -a`
+- [ ] `git push origin DESTINATION`
+```
+
+* Add a 'Release Steps' comment
+
+The 'Release Steps' are a reminder to the reviewer of the Pull Request of how to release the gem.
+
+```
+# Release
+
+Complete these steps on DESTINATION
+
+## `VERSION`
+
+<%- if options[:major] < 1 -%>
+### Compatible changes
+
+If your changes are compatible with the previous branch's API, then increment [`PATCH`](<%= version_path %>).
+
+### Incompatible changes
+
+If your changes are incompatible with the previous branch's API you can either (1) decide to remain pre-1.0.0 or (2)
+advance to 1.0.0.
+
+1. To remain pre-1..0.0, then increment [`MINOR`](<%= version_path %>) and reset [`PATCH`](<%= version_path %>) to `0`.
+2. To advance to 1.0.0, increment [`MAJOR`](<%= version_path %>) and reset [`MINOR`](<%= version_path %> and [`PATCH`](<%= version_path %>) to `0`.
+<%- else -%>
+### Bug fixes
+
+If your changes involve bug fixes, but don't affect the public API, then increment [`PATCH`](<%= version_path %>).
+
+### Compatible API changes
+
+If your changes involves widening of the API, such as adding new option parameters or adding new methods, then increment
+[`MINOR`](<%= version_path %>) and reset [`PATCH`](<%= version_path %>) to `0`.
+
+### Incompatible API changes
+
+If your changes involve shrinking the API, such as dropping positional arguments from methods, removing methods or
+making arguments stricter, then increment [`MAJOR`](<%= version_path %>) and reset [`MINOR`](<%= version_path %> and
+[`PATCH`](<%= version_path %>) to `0`.
+<%- end -%>
+
+- [ ] Following the rules for [semantic versioning 2.0](http://semver.org/spec/v2.0.0.html), update [`MINOR`](<%= version_path %>) and [`PATCH`](<%= version_path %>) and commit the changes.
+<%- options[:ruby_versions].each do |ruby_version| -%>
+
+## <%= ruby_version %>
+- [ ] `rvm use <%= ruby_version %>@<%= name %>`
+- [ ] `rm Gemfile.lock`
+- [ ] `bundle install`
+- [ ] `rake release`
+<%- end -%>
+```
+
+### Downstream dependencies
+
+There are currently no known downstream dependencies

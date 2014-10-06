@@ -55,7 +55,7 @@ describe Metasploit::Version::CLI do
         install
       end
 
-      it 'generates version.rb template' do
+      it 'generates version.rb from a template' do
         expect(cli).to receive(:template).with('lib/versioned/version.rb.tt', 'lib/metasploit/version/version.rb')
 
         install
@@ -63,6 +63,12 @@ describe Metasploit::Version::CLI do
 
       it 'installs bundle' do
         expect(cli).to receive(:install_bundle)
+
+        install
+      end
+
+      it 'generates CONTRIBUTING.md from a template' do
+        expect(cli).to receive(:template).with('CONTRIBUTING.md.tt', 'CONTRIBUTING.md')
 
         install
       end
