@@ -102,6 +102,7 @@ class Metasploit::Version::CLI < Thor
     template('lib/versioned/version.rb.tt', "lib/#{namespaced_path}/version.rb")
     install_bundle
     template('CONTRIBUTING.md.tt', 'CONTRIBUTING.md')
+    template('RELEASING.md.tt', 'RELEASING.md')
     setup_rspec
   end
 

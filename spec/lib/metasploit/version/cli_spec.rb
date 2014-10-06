@@ -73,6 +73,12 @@ describe Metasploit::Version::CLI do
         install
       end
 
+      it 'generates RELEASING.md from a template' do
+        expect(cli).to receive(:template).with('RELEASING.md.tt', 'RELEASING.md')
+
+        install
+      end
+
       it 'setups up rspec' do
         expect(cli).to receive(:setup_rspec)
 
