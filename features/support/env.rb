@@ -1,4 +1,4 @@
-if ['ruby', 'jruby'].include? RUBY_ENGINE
+if RUBY_ENGINE == 'ruby'
   # Has to be the first file required so that all other files show coverage information
   require 'simplecov'
 end
