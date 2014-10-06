@@ -12,7 +12,6 @@ Feature: metasploit-version install should add CONTRIBUTING.md that handle pre-1
     And I set the environment variables to:
       | variable            | value |
       | TRAVIS_PULL_REQUEST | false |
-    And I successfully run `metasploit-version install --force`
 
   Scenario: < 1.0.0
     When I successfully run `metasploit-version install --force --major 0 --minor 1 --patch 2 --no-bundle-install`
