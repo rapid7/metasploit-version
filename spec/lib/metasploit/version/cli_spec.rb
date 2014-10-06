@@ -67,6 +67,12 @@ describe Metasploit::Version::CLI do
         install
       end
 
+      it 'generates CHANGELOG.md from a template' do
+        expect(cli).to receive(:template).with('CHANGELOG.md.tt', 'CHANGELOG.md')
+
+        install
+      end
+
       it 'generates CONTRIBUTING.md from a template' do
         expect(cli).to receive(:template).with('CONTRIBUTING.md.tt', 'CONTRIBUTING.md')
 
