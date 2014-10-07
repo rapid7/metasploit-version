@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-describe Metasploit::Version::CLI do
+RSpec.describe Metasploit::Version::CLI do
   subject(:cli) {
     described_class.new
   }

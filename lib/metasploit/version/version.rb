@@ -3,7 +3,7 @@ module Metasploit
     # Holds components of {VERSION} as defined by {http://semver.org/spec/v2.0.0.html semantic versioning v2.0.0}.
     module Version
       #
-      # Constants
+      # CONSTANTS
       #
 
       # The major version number.
