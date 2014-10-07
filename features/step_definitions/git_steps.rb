@@ -1,6 +1,6 @@
 fail_on_error = true
 
-Given /^a git repository$/ do
+Given(/^a git repository$/) do
   # git init will fail if account ident it not setup
   if ENV['TRAVIS'] == 'true'
     run_simple('git config --global user.email "cucumber@example.com"')
@@ -14,7 +14,7 @@ Given /^a git repository$/ do
   run_simple('git commit --message "Initial commit"', fail_on_error)
 end
 
-Given /^(\d+) commits$/ do |commits|
+Given(/^(\d+) commits$/) do |commits|
   commits = commits.to_i
 
   commits.times do |commit|
@@ -25,7 +25,7 @@ Given /^(\d+) commits$/ do |commits|
   end
 end
 
-Given /^a git checkout of "(.*?)"$/ do |treeish|
+Given(/^a git checkout of "(.*?)"$/) do |treeish|
   run_simple("git checkout #{treeish}", fail_on_error)
 end
 
