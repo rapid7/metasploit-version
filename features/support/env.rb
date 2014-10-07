@@ -20,14 +20,14 @@ require 'aruba/jruby'
 if defined? SimpleCov
   Before do |scenario|
     command_name = case scenario
-                     when Cucumber::Ast::Scenario, Cucumber::Ast::ScenarioOutline
-                       "#{scenario.feature.title} #{scenario.name}"
-                     when Cucumber::Ast::OutlineTable::ExampleRow
-                       scenario_outline = scenario.scenario_outline
+                   when Cucumber::Ast::Scenario, Cucumber::Ast::ScenarioOutline
+                     "#{scenario.feature.title} #{scenario.name}"
+                   when Cucumber::Ast::OutlineTable::ExampleRow
+                     scenario_outline = scenario.scenario_outline
 
-                       "#{scenario_outline.feature.title} #{scenario_outline.name} #{scenario.name}"
-                     else
-                       raise TypeError, "Don't know how to extract command name from #{scenario.class}"
+                     "#{scenario_outline.feature.title} #{scenario_outline.name} #{scenario.name}"
+                   else
+                     raise TypeError, "Don't know how to extract command name from #{scenario.class}"
                    end
 
     # Used in simplecov_setup so that each scenario has a different name and their coverage results are merged instead
