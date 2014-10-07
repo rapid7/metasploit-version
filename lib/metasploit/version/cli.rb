@@ -55,7 +55,7 @@ class Metasploit::Version::CLI < Thor
   #
 
   desc 'install',
-       "Install metasploit-version and sets up files"
+       'Install metasploit-version and sets up files'
   long_desc(
       "Adds 'metasploit-version' as a development dependency in this project's gemspec OR updates the semantic version requirement; " \
       "adds semantic versioning version.rb file."
