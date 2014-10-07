@@ -12,18 +12,6 @@ RSpec.describe Metasploit::Version::CLI do
       it { is_expected.to eq('metasploit-version') }
     end
 
-    context 'DEVELOPMENT_DEPENDENCY_LINE' do
-      subject(:development_dependency_line) {
-        described_class::DEVELOPMENT_DEPENDENCY_LINE
-      }
-
-      if Metasploit::Version::Version::MAJOR > 0
-        it { is_expected.to eq("  spec.add_development_dependency 'metasploit-version', '~> #{Metasploit::Version::Version::MAJOR}.#{Metasploit::Version::Version::MINOR}'\n")}
-      else
-        it { is_expected.to eq("  spec.add_development_dependency 'metasploit-version', '~> #{Metasploit::Version::Version::MAJOR}.#{Metasploit::Version::Version::MINOR}.#{Metasploit::Version::Version::PATCH}'\n")}
-      end
-    end
-
     context 'DEVELOPMENT_DEPENDENCY_REGEXP' do
       subject(:development_dependency_regexp) {
         described_class::DEVELOPMENT_DEPENDENCY_REGEXP
@@ -145,6 +133,18 @@ RSpec.describe Metasploit::Version::CLI do
     end
   end
 
+  context '#development_dependency_line' do
+    subject(:development_dependency_line) {
+      cli.send(:development_dependency_line)
+    }
+
+    it 'calls #version_requirement' do
+      expect(cli).to receive(:version_requirement)
+
+      development_dependency_line
+    end
+  end
+
   context '#ensure_development_dependency' do
     subject(:ensure_development_dependency) {
       cli.send(:ensure_development_dependency)
@@ -186,7 +186,7 @@ EOS
         gemspec_after = File.read(gemspec.path)
 
         expect(gemspec_after.scan('metasploit-version').length).to eq(1)
-        expect(gemspec_after).to match(/spec\.add_development_dependency 'metasploit-version', '~> #{Metasploit::Version::Version::MAJOR}\.#{Metasploit::Version::Version::MINOR}\.#{Metasploit::Version::Version::PATCH}'/)
+        expect(gemspec_after).to match(/spec\.add_development_dependency 'metasploit-version', '#{cli.send(:version_requirement)}'/)
       end
     end
 
@@ -201,7 +201,7 @@ EOS
         gemspec_after = File.read(gemspec.path)
 
         expect(gemspec_after.scan('metasploit-version').length).to eq(1)
-        expect(gemspec_after).to match(/spec\.add_development_dependency 'metasploit-version', '~> #{Metasploit::Version::Version::MAJOR}\.#{Metasploit::Version::Version::MINOR}\.#{Metasploit::Version::Version::PATCH}'/)
+        expect(gemspec_after).to match(/spec\.add_development_dependency 'metasploit-version', '#{cli.send(:version_requirement)}'/)
       end
     end
 
@@ -216,7 +216,7 @@ EOS
         gemspec_after = File.read(gemspec.path)
 
         expect(gemspec_after.scan('metasploit-version').length).to eq(1)
-        expect(gemspec_after).to match(/spec\.add_development_dependency 'metasploit-version', '~> #{Metasploit::Version::Version::MAJOR}\.#{Metasploit::Version::Version::MINOR}\.#{Metasploit::Version::Version::PATCH}'/)
+        expect(gemspec_after).to match(/spec\.add_development_dependency 'metasploit-version', '#{cli.send(:version_requirement)}'/)
       end
     end
   end
@@ -432,6 +432,83 @@ EOS
       expect(namespaced_path).not_to include('-')
       expect(namespaced_path).to include('_')
       expect(namespaced_path).to eq('debugger/ruby_core_source')
+    end
+  end
+
+  context '#version_requirement' do
+    subject(:version_requirement) {
+      cli.send(:version_requirement)
+    }
+
+    #
+    # lets
+    #
+
+    let(:major) {
+      1
+    }
+
+    let(:minor) {
+      2
+    }
+
+    let(:patch) {
+      3
+    }
+
+    #
+    # Callbacks
+    #
+
+    before(:each) do
+      stub_const('Metasploit::Version::Version::MAJOR', major)
+      stub_const('Metasploit::Version::Version::MINOR', minor)
+      stub_const('Metasploit::Version::Version::PATCH', patch)
+
+      if prerelease.nil?
+        hide_const('Metasploit::Version::Version::PRERELEASE')
+      else
+        stub_const('Metasploit::Version::Version::PRERELEASE', prerelease)
+      end
+
+      # Regenerate GEM_VERSION to use stub_const and remove_const values
+      stub_const('Metasploit::Version::GEM_VERSION', Metasploit::Version::Version.gem)
+    end
+
+    context 'with Metasploit::Version::Version::PRERELEASE' do
+      let(:prerelease) {
+        'super-cool'
+      }
+
+      it "is '= <GEM_VERSION>'" do
+        expect(version_requirement).to eq('= 1.2.3.pre.super.pre.cool')
+      end
+    end
+
+    context 'without Metasploit::Version::Version::PRERELEASE' do
+      let(:prerelease) {
+        nil
+      }
+
+      context 'with Metasploit::Version::Version::MAJOR < 1' do
+        let(:major) {
+          0
+        }
+
+        it "is '~> <MAJOR>.<MINOR>.<PATCH>'" do
+          expect(version_requirement).to eq('~> 0.2.3')
+        end
+      end
+
+      context 'with Metasploit::Version::Version::MAJOR >= 1' do
+        let(:major) {
+          1
+        }
+
+        it "is '~> <MAJOR>.<MINOR>'" do
+          expect(version_requirement).to eq('~> 1.2')
+        end
+      end
     end
   end
 end

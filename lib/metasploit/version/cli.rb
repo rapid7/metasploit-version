@@ -27,10 +27,6 @@ class Metasploit::Version::CLI < Thor
 
   # Name of this gem, for use in other projects that call `metasploit-version install`.
   GEM_NAME = 'metasploit-version'
-  # Line added to a project's gemspec to add `metasploit-version` as a development dependency.
-  #
-  # @todo Change to '~> #{Metasploit::Version::Version::MAJOR}.#{Metasploit::Version::Version::MINOR}' once metasploit-version is 1.0.0
-  DEVELOPMENT_DEPENDENCY_LINE = "  spec.add_development_dependency '#{GEM_NAME}', '~> #{Metasploit::Version::Version::MAJOR}.#{Metasploit::Version::Version::MINOR}.#{Metasploit::Version::Version::PATCH}'\n"
   # Matches pre-existing development dependency on metasploit-version for updating.
   DEVELOPMENT_DEPENDENCY_REGEXP = /spec\.add_development_dependency\s+(?<quote>"|')#{GEM_NAME}\k<quote>/
 
@@ -118,6 +114,13 @@ class Metasploit::Version::CLI < Thor
     word[0, 1].upcase + word[1 .. -1]
   end
 
+  # The line injected into the gemspec by {#ensure_development_dependency}
+  #
+  # @return [String]
+  def development_dependency_line
+    "  spec.add_development_dependency '#{GEM_NAME}', '#{version_requirement}'\n"
+  end
+
   # Ensures that the {#gemspec_path} contains a development dependency on {GEM_NAME}.
   #
   # Adds `spec.add_development_dependency 'metasploit_version', '~> <semantic version requirement>'` if {#gemspec_path}
@@ -150,7 +153,7 @@ class Metasploit::Version::CLI < Thor
           match = line.match(DEVELOPMENT_DEPENDENCY_REGEXP)
 
           if match
-            lines << DEVELOPMENT_DEPENDENCY_LINE
+            lines << development_dependency_line
           else
             lines << line
           end
@@ -174,7 +177,7 @@ class Metasploit::Version::CLI < Thor
         end
       end
 
-      lines.insert(end_index, DEVELOPMENT_DEPENDENCY_LINE)
+      lines.insert(end_index, development_dependency_line)
     end
 
     File.open(path, 'w') do |f|
@@ -297,5 +300,22 @@ class Metasploit::Version::CLI < Thor
   # @return [String]
   def version_path
     @version_path ||= "lib/#{namespaced_path}/version.rb"
+  end
+
+  # The version requirement on the `metasploit-version` development dependency in {#development_dependency_line}.
+  #
+  # @return [String]
+  def version_requirement
+    if defined? Metasploit::Version::Version::PRERELEASE
+      # require exactly this pre-release in case there are multiple prereleases for the same
+      # version number due to parallel branches.
+      "= #{Metasploit::Version::GEM_VERSION}"
+    elsif Metasploit::Version::Version::MAJOR < 1
+      # can only allow the PATCH to wiggle pre-1.0.0
+      "~> #{Metasploit::Version::Version::MAJOR}.#{Metasploit::Version::Version::MINOR}.#{Metasploit::Version::Version::PATCH}"
+    else
+      # can allow the MINOR to wiggle 1.0.0+
+      "~> #{Metasploit::Version::Version::MAJOR}.#{Metasploit::Version::Version::MINOR}"
+    end
   end
 end
