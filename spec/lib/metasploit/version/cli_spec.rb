@@ -17,8 +17,8 @@ RSpec.describe Metasploit::Version::CLI do
         described_class::DEVELOPMENT_DEPENDENCY_REGEXP
       }
 
-      it { is_expected.to match(%q{spec.add_development_dependency 'metasploit-version'})}
-      it { is_expected.to match(%q{spec.add_development_dependency "metasploit-version"})}
+      it { is_expected.to match(%q{spec.add_development_dependency 'metasploit-version'}) }
+      it { is_expected.to match(%q{spec.add_development_dependency "metasploit-version"}) }
     end
   end
 
