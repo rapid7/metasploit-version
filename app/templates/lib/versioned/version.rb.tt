@@ -1,0 +1,64 @@
+<%- namespaces.each_with_index do |module_name, i| -%>
+<%= '  ' * i %>module <%= module_name %>
+<%- end -%>
+<%- indent = '  ' * namespaces.length -%>
+<%= indent %># Holds components of {VERSION} as defined by {http://semver.org/spec/v2.0.0.html semantic versioning v2.0.0}.
+<%= indent %>module Version
+<%= indent %>  #
+<%= indent %>  # CONSTANTS
+<%= indent %>  #
+
+<%= indent %>  # The major version number.
+<%= indent %>  MAJOR = <%= options[:major] %>
+<%= indent %>  # The minor version number, scoped to the {MAJOR} version number.
+<%= indent %>  MINOR = <%= options[:minor] %>
+<%= indent %>  # The patch version number, scoped to the {MAJOR} and {MINOR} version numbers.
+<%= indent %>  PATCH = <%= options[:patch] %>
+<%- if prerelease -%>
+<%= indent %>  # The prerelease version, scoped to the {MAJOR}, {MINOR}, and {PATCH} version numbers.
+<%= indent %>  PRERELEASE = '<%= prerelease %>'
+<%- end -%>
+
+<%= indent %>  #
+<%= indent %>  # Module Methods
+<%= indent %>  #
+
+<%= indent %>  # The full version string, including the {<%= namespace_name %>::Version::MAJOR},
+<%= indent %>  # {<%= namespace_name %>::Version::MINOR}, {<%= namespace_name %>::Version::PATCH}, and optionally, the
+<%= indent %>  # `<%= namespace_name %>::Version::PRERELEASE` in the
+<%= indent %>  # {http://semver.org/spec/v2.0.0.html semantic versioning v2.0.0} format.
+<%= indent %>  #
+<%= indent %>  # @return [String] '{<%= namespace_name %>::Version::MAJOR}.{<%= namespace_name %>::Version::MINOR}.{<%= namespace_name %>::Version::PATCH}' on master.
+<%= indent %>  #   '{<%= namespace_name %>::Version::MAJOR}.{<%= namespace_name %>::Version::MINOR}.{<%= namespace_name %>::Version::PATCH}-PRERELEASE'
+<%= indent %>  #   on any branch other than master.
+<%= indent %>  def self.full
+<%= indent %>    version = "#{MAJOR}.#{MINOR}.#{PATCH}"
+
+<%= indent %>    if defined? PRERELEASE
+<%= indent %>      version = "#{version}-#{PRERELEASE}"
+<%= indent %>    end
+
+<%= indent %>    version
+<%= indent %>  end
+
+<%= indent %>  # The full gem version string, including the {<%= namespace_name %>::Version::MAJOR},
+<%= indent %>  # {<%= namespace_name %>::Version::MINOR}, {<%= namespace_name %>::Version::PATCH}, and optionally, the
+<%= indent %>  # `<%= namespace_name %>::Version::PRERELEASE` in the
+<%= indent %>  # {http://guides.rubygems.org/specification-reference/#version RubyGems versioning} format.
+<%= indent %>  #
+<%= indent %>  # @return [String] '{<%= namespace_name %>::Version::MAJOR}.{<%= namespace_name %>::Version::MINOR}.{<%= namespace_name %>::Version::PATCH}'
+<%= indent %>  #   on master.  '{<%= namespace_name %>::Version::MAJOR}.{<%= namespace_name %>::Version::MINOR}.{<%= namespace_name %>::Version::PATCH}.PRERELEASE'
+<%= indent %>  #   on any branch other than master.
+<%= indent %>  def self.gem
+<%= indent %>    full.gsub('-', '.pre.')
+<%= indent %>  end
+<%= indent %>end
+
+<%= indent %># (see Version.gem)
+<%= indent %>GEM_VERSION = Version.gem
+
+<%= indent %># (see Version.full)
+<%= indent %>VERSION = Version.full
+<%- (namespaces.length - 1).downto(0) do |i| -%>
+<%= '  ' * i %>end
+<%- end -%>

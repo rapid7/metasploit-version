@@ -2,7 +2,7 @@
 
 ## Forking
 
-[Fork this repository](https://github.com/rapid7/metasploit-version/fork)
+[Fork this repository](<%= github_url %>/fork)
 
 ## Branching
 
@@ -14,7 +14,7 @@ Branch names follow the format `TYPE/ISSUE/SUMMARY`.  You can create it with `gi
 
 ### `ISSUE`
 
-`ISSUE` is either a [Github issue](https://github.com/rapid7/metasploit-version/issues) or an issue from some other
+`ISSUE` is either a [Github issue](<%= github_url %>/issues) or an issue from some other
 issue tracking software.
 
 ### `SUMMARY`
@@ -25,7 +25,7 @@ issue tracking software.
 
 ### `PRERELEASE`
 
-1. Update `PRERELEASE` to match the `SUMMARY` in the branch name.  If you branched from `master`, and [version.rb](lib/metasploit/version/version.rb) does not have `PRERELEASE` defined, then adding the following lines after `PATCH`:
+1. Update `PRERELEASE` to match the `SUMMARY` in the branch name.  If you branched from `master`, and [version.rb](<%= version_path %>) does not have `PRERELEASE` defined, then adding the following lines after `PATCH`:
 ```
 # The prerelease version, scoped to the {MAJOR}, {MINOR}, and {PATCH} version number.
 PRERELEASE = '<SUMMARY>'
@@ -49,7 +49,7 @@ Push your branch to your fork on gitub: `git push TYPE/ISSUE/SUMMARY`
 
 ### Pull Request
 
-* [Create new Pull Request](https://github.com/rapid7/metasploit-version/compare/)
+* [Create new Pull Request](<%= github_url %>/compare/)
 * Add a Verification Steps to the description comment
 
 ```
@@ -66,7 +66,7 @@ You should also include at least one scenario to manually check the changes outs
 
 * Add a Post-merge Steps comment
 
-The 'Post-merge Steps' are a reminder to the reviewer of the Pull Request of how to update the [`PRERELEASE`](lib/metasploit/version/version.rb) so that [version_spec.rb](spec/lib/metasploit/version/version.rb_spec.rb) passes on the target branch after the merge.
+The 'Post-merge Steps' are a reminder to the reviewer of the Pull Request of how to update the [`PRERELEASE`](<%= version_path %>) so that [version_spec.rb](spec/<%= version_path %>_spec.rb) passes on the target branch after the merge.
 
 DESTINATION is the name of the destination branch into which the merge is being made.  SOURCE_SUMMARY is the SUMMARY from TYPE/ISSUE/SUMMARY branch name for the SOURCE branch that is being made.
 
@@ -78,7 +78,7 @@ When merging to `master`:
 Perform these steps prior to pushing to master or the build will be broke on master.
 
 ## Version
-- [ ] Edit `lib/metasploit/version/version.rb`
+- [ ] Edit `<%= version_path %>`
 - [ ] Remove `PRERELEASE` and its comment as `PRERELEASE` is not defined on master.
 
 ## Gem build
@@ -102,11 +102,11 @@ When merging to DESTINATION other than `master`:
 Perform these steps prior to pushing to DESTINATION or the build will be broke on DESTINATION.
 
 ## Version
-- [ ] Edit `lib/metasploit/version/version.rb`
+- [ ] Edit `<%= version_path %>`
 - [ ] Change `PRERELEASE` from `SOURCE_SUMMARY` to `DESTINATION_SUMMARY` to match the branch (DESTINATION) summary (DESTINATION_SUMMARY)
 
 ## Gem build
-- [ ] gem build metasploit-version.gemspec
+- [ ] gem build <%= name %>.gemspec
 - [ ] VERIFY the prerelease suffix has change on the gem.
 
 ## RSpec

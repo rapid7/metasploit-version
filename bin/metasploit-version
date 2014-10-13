@@ -1,0 +1,12 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+
+begin
+  require 'metasploit/version/cli'
+rescue LoadError
+  warn 'Could not load "metasploit/version/cli"'
+  exit -1
+end
+
+Metasploit::Version::CLI.start

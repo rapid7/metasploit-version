@@ -1,0 +1,3 @@
+---
+# Don't automatically load simplecov_setup as it will be loaded as needed in Before
+default: --exclude support/simplecov_setup.rb

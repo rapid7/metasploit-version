@@ -1,15 +1,16 @@
-$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+require 'bundler/setup'
 
-if RUBY_ENGINE == 'ruby'
-# require before 'metasploit/version' so coverage is shown for files required by 'metasploit/version'
-  require 'simplecov'
-end
+#
+# Gems
+#
+
+require 'metasploit/version'
 
 #
 # Project
 #
 
-require 'metasploit/version'
+require '<%= namespaced_path %>'
 
 # Use find_all_by_name instead of find_by_name as find_all_by_name will return pre-release versions
 gem_specification = Gem::Specification.find_all_by_name('metasploit-version').first

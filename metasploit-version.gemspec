@@ -24,7 +24,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'metasploit-yard', '~> 1.0'
   spec.add_development_dependency "rake"
 
-
   if RUBY_PLATFORM =~ /java/
     # markdown library for YARD to enable proper parsing of README.md and CONTRIBUTING.md
     spec.add_development_dependency 'kramdown'
@@ -37,5 +36,6 @@ Gem::Specification.new do |spec|
     spec.platform = Gem::Platform::RUBY
   end
 
-  spec.add_runtime_dependency 'rspec'
+  spec.add_runtime_dependency 'rspec', '~> 3.1'
+  spec.add_runtime_dependency 'thor'
 end

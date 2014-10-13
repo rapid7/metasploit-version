@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-describe Metasploit::Version::Branch do
+RSpec.describe Metasploit::Version::Branch do
   context 'CONSTANTS' do
     context 'JENKINS_PREFIX_REGEXP' do
       subject(:jenkins_prefix_regexp) {

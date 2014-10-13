@@ -9,18 +9,25 @@ matrix:
   allow_failures:
     - rvm: ruby-head
   fast_finish: true
-  # documentation coverage is not influenced by ruby version, but the dependencies differ for MRI and JRuby, so
-  # rake yard for both.
   include:
+    # documentation coverage is not influenced by ruby version, but the dependencies differ for MRI and JRuby, so
+    # rake yard for both.
     - rvm: 2.1
       env: RAKE_TASK=yard
     - rvm: jruby
       env: RAKE_TASK=yard
+    # Advised to turn off JIT with RBXOPT-Xint by @rubinius on twiiter
+    # @see https://twitter.com/rubinius/status/518563456363274240
+    # @see https://twitter.com/rubinius/status/518563552953917440
+    - rvm: rbx-2.2
+      env: RAKE_TASK=cucumber RBXOPT=-Xint
+    - rvm: rbx-2.2
+      env: RAKE_TASK=spec RBXOPT=-Xint
+
 rvm:
 - 1.9.3
 - 2.0
 - 2.1
 - ruby-head
 - jruby
-- rbx-2.2
 script: "bundle exec rake $RAKE_TASK"
