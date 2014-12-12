@@ -26,4 +26,5 @@ Feature: metasploit-version install should add CHANGELOG.md
       * Bug Fixes
       * Deprecations
       * Incompatible Changes
+
       """
