@@ -20,7 +20,9 @@ Feature: metasploit-version install should add CHANGELOG.md
     When I successfully run `metasploit-version install --force --no-bundle-install`
     Then the file "CHANGELOG.md" should contain exactly:
       """
-      # Next Release
+      # Changelog
+
+      ## Next Release
 
       * Enhancements
       * Bug Fixes
