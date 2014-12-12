@@ -3,6 +3,7 @@
 ## Next Release
 
 * Enhancements
+ * [#3](https://github.com/rapid7/metasploit-version/pull/3) `metasploit-version install` - [@limhoff-r7](https://github.com/limhoff-r7)
 * Bug Fixes
 * Deprecations
 * Incompatible Changes
