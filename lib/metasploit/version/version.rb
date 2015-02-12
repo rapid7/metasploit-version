@@ -13,6 +13,8 @@ module Metasploit
       # The patch number, scoped to the {MINOR} version number.
       PATCH = 3
 
+      PRERELEASE = 'metasploit-constant'
+
       #
       # Module Methods
       #

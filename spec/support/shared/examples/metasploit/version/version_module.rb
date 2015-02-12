@@ -1,3 +1,5 @@
+require 'metasploit/version/branch'
+
 shared_examples_for 'Metasploit::Version Version Module' do
   context 'CONSTANTS' do
     context 'MAJOR' do
