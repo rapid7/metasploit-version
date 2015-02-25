@@ -12,8 +12,6 @@ module Metasploit
       MINOR = 1
       # The patch number, scoped to the {MINOR} version number.
       PATCH = 3
-      # The prerelease version, scoped to the {PATCH} version number.
-      PRERELEASE = 'changelog-template'
 
       #
       # Module Methods
