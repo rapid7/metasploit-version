@@ -18,12 +18,15 @@ Feature: metasploit-version install should add CHANGELOG.md
       | variable            | value |
       | TRAVIS_PULL_REQUEST | false |
     When I successfully run `metasploit-version install --force --no-bundle-install`
-    Then the file "CHANGELOG.md" should contain:
+    Then the file "CHANGELOG.md" should contain exactly:
       """
-      # Next Release
+      # Changelog
+
+      ## Next Release
 
       * Enhancements
       * Bug Fixes
       * Deprecations
       * Incompatible Changes
+
       """
