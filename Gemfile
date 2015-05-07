@@ -18,4 +18,6 @@ group :test do
 
   # Test the shared example
   gem 'cucumber', '~> 2.0'
+  # Pending format can change between rspec versions
+  gem 'rspec', '~> 3.2.0'
 end

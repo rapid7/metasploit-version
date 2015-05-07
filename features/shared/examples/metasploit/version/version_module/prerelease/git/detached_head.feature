@@ -91,7 +91,9 @@ Feature: 'Metasploit::Version Version Module' shared example in detached head bu
     When I run `rspec spec/lib/my_namespace/my_gem/version_spec.rb --format documentation`
     Then the output should contain:
       """
-      Pending:
-        MyNamespace::MyGem::Version it should behave like Metasploit::Version Version Module CONSTANTS PRERELEASE has an abbreviated reference that can be parsed for prerelease
-          # Cannot determine branch name in detached HEAD state.  Set TRAVIS_BRANCH to supply branch name
+      Pending: (Failures listed here are expected and do not affect your suite's status)
+
+        1) MyNamespace::MyGem::Version it should behave like Metasploit::Version Version Module CONSTANTS PRERELEASE has an abbreviated reference that can be parsed for prerelease
+           # Cannot determine branch name in detached HEAD state.  Set TRAVIS_BRANCH to supply branch name
+           Failure/Error: fail "Do not know how to parse #{branch.inspect} for PRERELEASE"
       """
