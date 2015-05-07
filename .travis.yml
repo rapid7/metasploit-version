@@ -29,3 +29,4 @@ rvm:
 - ruby-head
 - jruby
 script: "bundle exec rake $RAKE_TASK"
+sudo: false
