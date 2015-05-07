@@ -17,5 +17,5 @@ group :test do
   end
 
   # Test the shared example
-  gem 'cucumber'
+  gem 'cucumber', '~> 2.0'
 end
