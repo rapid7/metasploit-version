@@ -1,3 +1,4 @@
+cache: bundler
 env:
   global:
     secure: "G0LDGrupZ+RAFzoPwd6bjfrWfwoU/V9RTswQXIUNmi640rW/CP86a8F9hQcAXdUwy7Ag1cwmlEEv2JDDbLopQdNvkh8B7M3PSIpmJWlBsj+UPMMcCz04oYiQB3G6xgYb4xeuY6cNqxiY2rTJMHlfUfTlSJf1Z0dh6hAS3alHpGw="
