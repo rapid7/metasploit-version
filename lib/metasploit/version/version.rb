@@ -12,8 +12,6 @@ module Metasploit
       MINOR = 1
       # The patch number, scoped to the {MAJOR} and {MINOR} version numbers.
       PATCH = 4
-      # The prerelease version, scoped to the {MAJOR}, {MINOR}, and {PATCH} version numbers.
-      PRERELEASE = 'build-cleanup'
 
       #
       # Module Methods
