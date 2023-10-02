@@ -1,0 +1,16 @@
+---
+info:
+  title: Metasploit Version
+  description: Shared examples for testing that the version of gems follow semantic
+    naming rule tied to the branch and tag.
+  x-cortex-git:
+    github:
+      alias: r7org
+      repository: rapid7/metasploit-version
+  x-cortex-tag: metasploit-version
+  x-cortex-type: service
+  x-cortex-domain-parents:
+  - tag: metasploit
+openapi: 3.0.1
+servers:
+- url: "/"
